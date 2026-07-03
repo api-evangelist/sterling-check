@@ -1,0 +1,108 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Sterling
+providerId: sterling-check
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Background Screening
+- Identity Verification
+- Compliance
+- Gated API
+- Plans
+description: >-
+  Sterling does not publish public, self-serve pricing for its background
+  screening services or its API. Pricing is quote-based and negotiated with a
+  Sterling (First Advantage) sales representative. Cost is driven by the
+  screening products consumed - i.e., billed per background check / per screening
+  package, with the price of each check depending on the products bundled
+  (criminal searches, employment and education verifications, drug and health
+  screening, identity verification, continuous monitoring) and the screening
+  region (US, EMEA, Canada, APAC). The API itself is not separately metered; you
+  are billed for the screenings you order through it. API access (Client ID and
+  Client Secret) is provisioned on request as part of a customer relationship.
+notes: >-
+  Per-check rates are not publicly documented and vary by contract, volume,
+  product mix, and region. Third-party downstream/passthrough fees (for example
+  court access or verification fees) may apply on top of Sterling's own charges.
+  Verify all pricing directly with a Sterling / First Advantage representative.
+sources:
+- https://www.sterlingcheck.com/services/api/
+- https://apidocs.sterlingcheck.app/
+- https://www.sterlingcheck.com/
+plans:
+- id: sterling-api-access
+  name: API Access (Gated)
+  type: gated
+  description: >-
+    Programmatic access to the Sterling API. Credentials (Client ID and Client
+    Secret) are requested per screening region and issued for sandbox and
+    production. There is no separate API subscription fee; you are billed for the
+    screenings you order.
+  entries:
+  - label: API Access
+    name: api_access
+    type: flat
+    metric: access
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included with a Sterling screening account (credentials by request)
+    userMultiplied: false
+  elements:
+  - name: OAuth2 Credentials
+  - name: Sandbox Environment
+  - name: Developer Portal
+  - name: Webhook Callbacks
+- id: sterling-per-screening
+  name: Per-Screening (Usage)
+  type: usage
+  description: >-
+    Billed per background check / screening ordered. The effective price depends
+    on the package (which screening products it bundles) and the screening
+    region. Rates are quote-based.
+  entries:
+  - label: Screenings Ordered
+    name: screenings
+    type: usage
+    metric: screenings
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: quote-based per check (varies by package and region)
+    userMultiplied: false
+  elements:
+  - name: Criminal Checks
+  - name: Employment and Education Verifications
+  - name: Drug and Health Screening
+  - name: Identity Verification
+  - name: Continuous / Recurring Monitoring
+- id: sterling-enterprise
+  name: Enterprise / Custom
+  type: enterprise
+  description: >-
+    Negotiated agreements for high-volume screening programs, global/multi-region
+    coverage, ATS/HRIS integrations, compliance workflows, SLAs, and volume
+    pricing. Contact Sterling / First Advantage sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Volume Pricing
+  - name: Multi-Region Coverage
+  - name: Dedicated Support and SLAs
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

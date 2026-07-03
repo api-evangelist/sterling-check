@@ -1,0 +1,755 @@
+openapi: 3.0.3
+info:
+  title: Sterling API
+  description: >-
+    The Sterling API integrates background and identity screening into your
+    platform and manages the process end to end. It is a RESTful, OAuth2-secured
+    API: you exchange a Client ID and Client Secret for an access token, then
+    create candidates, look up the screening packages available to your account,
+    initiate screenings (orders), invite candidates by email or hosted link,
+    retrieve results/reports (PDF or HTML), and receive real-time status updates
+    via webhook callbacks.
+
+
+    ACCESS IS GATED. Credentials are provisioned per screening region (US, EMEA,
+    Canada, or APAC) by request through Sterling; there is a separate set of
+    credentials for the sandbox/integration environment and for production.
+
+
+    GROUNDING AND MODELING NOTE: The documented, confirmed operations are the
+    OAuth token exchange, GET /packages, POST /candidates, POST /screenings
+    (including the invite object and the callbackUri for webhooks), and the
+    availability of results/reports with per-item statuses. The remaining
+    operations in this document (list/retrieve/cancel screenings, retrieve/update
+    candidates, retrieve a package, report retrieval paths, recurring screening
+    management, and standalone webhook subscription management) are HONESTLY
+    MODELED on Sterling's documented order lifecycle and are marked in each
+    operation description with "[MODELED]". The API request host is also modeled:
+    exact hosts are provisioned with your credentials. The OAuth host
+    auth.sterlingcheck.app and the documentation host apidocs.sterlingcheck.app
+    are confirmed; api.sterlingcheck.app is a representative modeled base.
+
+
+    Sterling is a First Advantage company (First Advantage completed its $2.2B
+    acquisition of Sterling Check Corp on October 31, 2024).
+  version: '2.0'
+  contact:
+    name: Sterling (a First Advantage company)
+    url: https://www.sterlingcheck.com/services/api/
+  x-documentation: https://apidocs.sterlingcheck.app/
+  x-developer-portal: https://developer.sterlingcheck.app/
+  x-acquisition: First Advantage completed acquisition of Sterling Check Corp on 2024-10-31 ($2.2B).
+servers:
+  - url: https://api.sterlingcheck.app/v2
+    description: Production (MODELED representative host - exact host provisioned with production credentials)
+  - url: https://api-sandbox.sterlingcheck.app/v2
+    description: Sandbox / Integration (MODELED representative host - exact host provisioned with sandbox credentials)
+security:
+  - oAuth2ClientCredentials: []
+  - bearerAuth: []
+tags:
+  - name: Authentication
+    description: OAuth2 token exchange using your Client ID and Client Secret.
+  - name: Packages
+    description: Screening packages (groups of screening products) available to your account.
+  - name: Candidates
+    description: Candidate (subject) records that screenings are run against.
+  - name: Screenings
+    description: Screening orders and their lifecycle, including recurring/continuous screening.
+  - name: Invites
+    description: Candidate invitations to complete consent and data collection.
+  - name: Reports
+    description: Results of completed screenings, with per-item statuses (PDF or HTML).
+  - name: Webhooks
+    description: Real-time screening status callbacks.
+paths:
+  /oauth/token:
+    servers:
+      - url: https://auth.sterlingcheck.app
+        description: OAuth token host (CONFIRMED domain)
+    post:
+      operationId: createAccessToken
+      tags:
+        - Authentication
+      summary: Exchange Client ID and Client Secret for an access token
+      description: >-
+        [CONFIRMED] Send your Client ID and Client Secret to obtain an OAuth2
+        access token. The response contains an access token used as a Bearer
+        token on all subsequent requests. Credentials are region-scoped (US,
+        EMEA, Canada, APAC) and differ between sandbox and production.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - client_id
+                - client_secret
+                - grant_type
+              properties:
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                grant_type:
+                  type: string
+                  enum: [client_credentials]
+                  default: client_credentials
+      responses:
+        '200':
+          description: An access token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    example: 3600
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /packages:
+    get:
+      operationId: listPackages
+      tags:
+        - Packages
+      summary: List available screening packages
+      description: >-
+        [CONFIRMED] Retrieve a list of the packages available to your account. A
+        package is a group of screening products. Each package specifies which
+        fields are required on a candidate record in order to process the
+        associated screening.
+      responses:
+        '200':
+          description: A list of packages.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Package'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /packages/{packageId}:
+    get:
+      operationId: getPackage
+      tags:
+        - Packages
+      summary: Retrieve a package
+      description: >-
+        [MODELED] Retrieve a single package by ID, including the screening
+        products it contains and the candidate fields it requires.
+      parameters:
+        - $ref: '#/components/parameters/PackageId'
+      responses:
+        '200':
+          description: A package.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /candidates:
+    post:
+      operationId: createCandidate
+      tags:
+        - Candidates
+      summary: Create a candidate
+      description: >-
+        [CONFIRMED] Create a candidate (the subject of a screening). Minimum
+        fields are first name, last name, email, and clientReferenceId.
+        Additional PII (date of birth, address history, government IDs, etc.) may
+        be required depending on the package the candidate will be screened with.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidateCreate'
+      responses:
+        '201':
+          description: The created candidate.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /candidates/{candidateId}:
+    get:
+      operationId: getCandidate
+      tags:
+        - Candidates
+      summary: Retrieve a candidate
+      description: '[MODELED] Retrieve a candidate record by ID.'
+      parameters:
+        - $ref: '#/components/parameters/CandidateId'
+      responses:
+        '200':
+          description: A candidate.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateCandidate
+      tags:
+        - Candidates
+      summary: Update a candidate
+      description: >-
+        [MODELED] Update mutable fields on a candidate record before a screening
+        is submitted.
+      parameters:
+        - $ref: '#/components/parameters/CandidateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidateCreate'
+      responses:
+        '200':
+          description: The updated candidate.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /screenings:
+    get:
+      operationId: listScreenings
+      tags:
+        - Screenings
+      summary: List screenings
+      description: '[MODELED] List the screenings (orders) in your account, filterable by status.'
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ScreeningStatus'
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 25
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: A list of screenings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Screening'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createScreening
+      tags:
+        - Screenings
+      summary: Initiate a screening
+      description: >-
+        [CONFIRMED] Initiate a background screening (order) for a candidate
+        against a package. Three initiation workflows are supported via the
+        invite object: set invite.method to "email" so Sterling emails the
+        candidate an invite; set invite.method to "link" to receive a hosted form
+        URL in the response for embedding in your own flow; or omit the invite to
+        initiate directly when candidate data is already complete. Provide a
+        callbackUri to receive real-time webhook status updates. Set the recurring
+        object to schedule continuous/recurring screening.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScreeningCreate'
+      responses:
+        '201':
+          description: The created screening. If invite.method is "link", the response includes the hosted form URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screening'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /screenings/{screeningId}:
+    get:
+      operationId: getScreening
+      tags:
+        - Screenings
+      summary: Retrieve a screening
+      description: >-
+        [MODELED] Retrieve a screening (order) by ID, including its current
+        status and rolled-up report item statuses.
+      parameters:
+        - $ref: '#/components/parameters/ScreeningId'
+      responses:
+        '200':
+          description: A screening.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screening'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /screenings/{screeningId}/cancel:
+    post:
+      operationId: cancelScreening
+      tags:
+        - Screenings
+      summary: Cancel a screening
+      description: '[MODELED] Cancel an in-progress screening where allowed by product and compliance rules.'
+      parameters:
+        - $ref: '#/components/parameters/ScreeningId'
+      responses:
+        '200':
+          description: The cancelled screening.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screening'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /screenings/{screeningId}/invite:
+    post:
+      operationId: resendInvite
+      tags:
+        - Invites
+      summary: Resend or retrieve a screening invite
+      description: >-
+        [MODELED] Resend the candidate invitation email, or retrieve the hosted
+        invite/form link for a screening that was created with invite.method set
+        to "link".
+      parameters:
+        - $ref: '#/components/parameters/ScreeningId'
+      responses:
+        '200':
+          description: The invite details, including the hosted form URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /screenings/{screeningId}/report:
+    get:
+      operationId: getScreeningReport
+      tags:
+        - Reports
+      summary: Retrieve a screening report
+      description: >-
+        [MODELED path, CONFIRMED concept] Retrieve the report/results for a
+        completed screening. A screening rolls up multiple report items, each
+        with its own status. Request PDF or HTML via the Accept header (the docs
+        state reports are available in PDF or HTML formats).
+      parameters:
+        - $ref: '#/components/parameters/ScreeningId'
+        - name: Accept
+          in: header
+          required: false
+          schema:
+            type: string
+            enum:
+              - application/json
+              - application/pdf
+              - text/html
+            default: application/json
+      responses:
+        '200':
+          description: The screening report.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/html:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /webhooks:
+    get:
+      operationId: listWebhooks
+      tags:
+        - Webhooks
+      summary: List webhook subscriptions
+      description: >-
+        [MODELED] List account-level webhook subscriptions. The confirmed
+        mechanism is the per-screening callbackUri on POST /screenings; an
+        account-level subscription surface is modeled here.
+      responses:
+        '200':
+          description: A list of webhook subscriptions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebhookSubscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createWebhook
+      tags:
+        - Webhooks
+      summary: Create a webhook subscription
+      description: '[MODELED] Register an account-level callback URL to receive screening status events.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscriptionCreate'
+      responses:
+        '201':
+          description: The created webhook subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /webhooks/{webhookId}:
+    delete:
+      operationId: deleteWebhook
+      tags:
+        - Webhooks
+      summary: Delete a webhook subscription
+      description: '[MODELED] Delete an account-level webhook subscription.'
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth2 client credentials grant using your Client ID and Client Secret.
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.sterlingcheck.app/oauth/token
+          scopes: {}
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: The access token returned from the OAuth token exchange, sent as a Bearer token.
+  parameters:
+    PackageId:
+      name: packageId
+      in: path
+      required: true
+      schema:
+        type: string
+    CandidateId:
+      name: candidateId
+      in: path
+      required: true
+      schema:
+        type: string
+    ScreeningId:
+      name: screeningId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: The request was malformed or missing required fields.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Package:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        screeningProducts:
+          type: array
+          items:
+            type: string
+          description: The screening products grouped into this package (e.g., criminal, employment verification, drug test).
+        requiredCandidateFields:
+          type: array
+          items:
+            type: string
+          description: Candidate fields required to process a screening with this package.
+    CandidateCreate:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - clientReferenceId
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        email:
+          type: string
+          format: email
+        clientReferenceId:
+          type: string
+          description: Your own reference identifier for the candidate.
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+    Candidate:
+      allOf:
+        - $ref: '#/components/schemas/CandidateCreate'
+        - type: object
+          properties:
+            id:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+    Address:
+      type: object
+      properties:
+        line1:
+          type: string
+        line2:
+          type: string
+        city:
+          type: string
+        region:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
+    ScreeningCreate:
+      type: object
+      required:
+        - candidateId
+        - packageId
+      properties:
+        candidateId:
+          type: string
+        packageId:
+          type: string
+        clientReferenceId:
+          type: string
+        callbackUri:
+          type: string
+          format: uri
+          description: URL Sterling posts real-time status-change webhook events to.
+        invite:
+          $ref: '#/components/schemas/InviteRequest'
+        recurring:
+          $ref: '#/components/schemas/RecurringConfig'
+    InviteRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: [email, link]
+          description: >-
+            "email" sends the candidate an invitation email; "link" returns a
+            hosted form URL in the response for you to embed.
+    RecurringConfig:
+      type: object
+      description: '[MODELED] Configure continuous/recurring screening to monitor a candidate over time.'
+      properties:
+        enabled:
+          type: boolean
+        interval:
+          type: string
+          enum: [monthly, quarterly, annually]
+    Screening:
+      type: object
+      properties:
+        id:
+          type: string
+        candidateId:
+          type: string
+        packageId:
+          type: string
+        clientReferenceId:
+          type: string
+        status:
+          $ref: '#/components/schemas/ScreeningStatus'
+        inviteUrl:
+          type: string
+          format: uri
+          description: Present when invite.method was "link".
+        callbackUri:
+          type: string
+          format: uri
+        reportItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportItem'
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+    ScreeningStatus:
+      type: string
+      description: Rolled-up screening status. Individual report items carry their own statuses.
+      enum:
+        - pending
+        - awaiting_candidate
+        - in_progress
+        - completed
+        - cancelled
+        - review
+    Invite:
+      type: object
+      properties:
+        screeningId:
+          type: string
+        method:
+          type: string
+          enum: [email, link]
+        url:
+          type: string
+          format: uri
+        sentAt:
+          type: string
+          format: date-time
+    Report:
+      type: object
+      properties:
+        screeningId:
+          type: string
+        status:
+          $ref: '#/components/schemas/ScreeningStatus'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportItem'
+        completedAt:
+          type: string
+          format: date-time
+    ReportItem:
+      type: object
+      description: An individual product result within a screening report, each with its own status.
+      properties:
+        product:
+          type: string
+        status:
+          type: string
+          description: Common report item status values (e.g., pending, clear, consider, review).
+        summary:
+          type: string
+    WebhookSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+        callbackUri:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+        active:
+          type: boolean
+    WebhookSubscriptionCreate:
+      type: object
+      required:
+        - callbackUri
+      properties:
+        callbackUri:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string

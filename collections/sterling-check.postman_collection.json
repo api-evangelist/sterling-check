@@ -1,0 +1,198 @@
+{
+  "info": {
+    "name": "Sterling API",
+    "description": "Integrate background and identity screening into your platform end to end. OAuth2-secured (Client ID + Client Secret -> access token). Access is gated: credentials are provisioned per screening region (US, EMEA, Canada, APAC) for sandbox and production. Docs: https://apidocs.sterlingcheck.app/ (developer portal: https://developer.sterlingcheck.app/). Confirmed operations: OAuth token exchange, GET /packages, POST /candidates, POST /screenings (with invite object and callbackUri). Other requests are honestly modeled on the documented order lifecycle and marked [MODELED]. The API host {{baseUrl}} is a modeled representative host; the OAuth host is the confirmed auth.sterlingcheck.app. Sterling is a First Advantage company (acquisition closed 2024-10-31, $2.2B).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.sterlingcheck.app/v2", "type": "string" },
+    { "key": "authUrl", "value": "https://auth.sterlingcheck.app", "type": "string" },
+    { "key": "clientId", "value": "", "type": "string" },
+    { "key": "clientSecret", "value": "", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Create access token (CONFIRMED)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"grant_type\": \"client_credentials\",\n  \"client_id\": \"{{clientId}}\",\n  \"client_secret\": \"{{clientSecret}}\"\n}" },
+            "url": { "raw": "{{authUrl}}/oauth/token", "host": ["{{authUrl}}"], "path": ["oauth", "token"] },
+            "description": "Exchange your Client ID and Client Secret for an OAuth2 access token. Auth host auth.sterlingcheck.app is confirmed."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Packages",
+      "item": [
+        {
+          "name": "List packages (CONFIRMED)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/packages", "host": ["{{baseUrl}}"], "path": ["packages"] },
+            "description": "Retrieve the screening packages available to your account and the candidate fields each requires."
+          }
+        },
+        {
+          "name": "Get package (MODELED)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/packages/:packageId", "host": ["{{baseUrl}}"], "path": ["packages", ":packageId"], "variable": [{ "key": "packageId", "value": "" }] },
+            "description": "[MODELED] Retrieve a single package by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Candidates",
+      "item": [
+        {
+          "name": "Create candidate (CONFIRMED)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"clientReferenceId\": \"req-12345\"\n}" },
+            "url": { "raw": "{{baseUrl}}/candidates", "host": ["{{baseUrl}}"], "path": ["candidates"] },
+            "description": "Create a candidate. Minimum fields: firstName, lastName, email, clientReferenceId."
+          }
+        },
+        {
+          "name": "Get candidate (MODELED)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/candidates/:candidateId", "host": ["{{baseUrl}}"], "path": ["candidates", ":candidateId"], "variable": [{ "key": "candidateId", "value": "" }] },
+            "description": "[MODELED] Retrieve a candidate by ID."
+          }
+        },
+        {
+          "name": "Update candidate (MODELED)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+15555550123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/candidates/:candidateId", "host": ["{{baseUrl}}"], "path": ["candidates", ":candidateId"], "variable": [{ "key": "candidateId", "value": "" }] },
+            "description": "[MODELED] Update mutable fields on a candidate before submitting a screening."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Screenings",
+      "item": [
+        {
+          "name": "Initiate screening (CONFIRMED)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"candidateId\": \"cand_123\",\n  \"packageId\": \"pkg_basic\",\n  \"clientReferenceId\": \"req-12345\",\n  \"callbackUri\": \"https://example.com/webhooks/sterling\",\n  \"invite\": {\n    \"method\": \"email\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/screenings", "host": ["{{baseUrl}}"], "path": ["screenings"] },
+            "description": "Initiate a screening for a candidate against a package. invite.method 'email' emails the candidate; 'link' returns a hosted form URL. Provide callbackUri for real-time webhook updates."
+          }
+        },
+        {
+          "name": "List screenings (MODELED)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/screenings?status=in_progress&limit=25&offset=0", "host": ["{{baseUrl}}"], "path": ["screenings"], "query": [{ "key": "status", "value": "in_progress" }, { "key": "limit", "value": "25" }, { "key": "offset", "value": "0" }] },
+            "description": "[MODELED] List screenings, filterable by status."
+          }
+        },
+        {
+          "name": "Get screening (MODELED)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/screenings/:screeningId", "host": ["{{baseUrl}}"], "path": ["screenings", ":screeningId"], "variable": [{ "key": "screeningId", "value": "" }] },
+            "description": "[MODELED] Retrieve a screening and its rolled-up report item statuses."
+          }
+        },
+        {
+          "name": "Cancel screening (MODELED)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/screenings/:screeningId/cancel", "host": ["{{baseUrl}}"], "path": ["screenings", ":screeningId", "cancel"], "variable": [{ "key": "screeningId", "value": "" }] },
+            "description": "[MODELED] Cancel an in-progress screening where allowed."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invites",
+      "item": [
+        {
+          "name": "Resend/retrieve invite (MODELED)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/screenings/:screeningId/invite", "host": ["{{baseUrl}}"], "path": ["screenings", ":screeningId", "invite"], "variable": [{ "key": "screeningId", "value": "" }] },
+            "description": "[MODELED] Resend the invite email or retrieve the hosted form link. The invite object on POST /screenings is confirmed."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Get screening report (MODELED path, CONFIRMED concept)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/screenings/:screeningId/report", "host": ["{{baseUrl}}"], "path": ["screenings", ":screeningId", "report"], "variable": [{ "key": "screeningId", "value": "" }] },
+            "description": "Retrieve results for a completed screening. Reports are available in PDF or HTML (set Accept to application/pdf or text/html) and each report item has its own status."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "List webhook subscriptions (MODELED)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/webhooks", "host": ["{{baseUrl}}"], "path": ["webhooks"] },
+            "description": "[MODELED] List account-level webhook subscriptions. The confirmed mechanism is the per-screening callbackUri."
+          }
+        },
+        {
+          "name": "Create webhook subscription (MODELED)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"callbackUri\": \"https://example.com/webhooks/sterling\",\n  \"events\": [\"screening.status_changed\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/webhooks", "host": ["{{baseUrl}}"], "path": ["webhooks"] },
+            "description": "[MODELED] Register an account-level callback URL."
+          }
+        },
+        {
+          "name": "Delete webhook subscription (MODELED)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/webhooks/:webhookId", "host": ["{{baseUrl}}"], "path": ["webhooks", ":webhookId"], "variable": [{ "key": "webhookId", "value": "" }] },
+            "description": "[MODELED] Delete an account-level webhook subscription."
+          }
+        }
+      ]
+    }
+  ]
+}

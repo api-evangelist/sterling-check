@@ -1,0 +1,102 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Sterling
+providerId: sterling-check
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Background Screening
+- Identity Verification
+- Compliance
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Sterling spend. Sterling (a First Advantage company) is a
+  background and identity screening provider; cost is driven by the screenings
+  you order rather than by API calls. Billing is quote-based and contractual -
+  effectively per background check / per screening package, with per-check price
+  varying by the products bundled (criminal, verifications, drug/health,
+  identity, continuous monitoring) and the screening region (US, EMEA, Canada,
+  APAC). The API is the ordering channel, not a separately metered product.
+  Downstream passthrough fees (e.g., court access or verification fees) may add
+  to Sterling's own charges.
+notes: >-
+  Per-unit rates are not public and are set by contract; verify with a Sterling /
+  First Advantage representative. Because screenings are the cost driver,
+  allocate spend by package, region, and the internal team / requisition that
+  initiated each screening (map via clientReferenceId).
+sources:
+- https://www.sterlingcheck.com/services/api/
+- https://apidocs.sterlingcheck.app/
+- https://www.sterlingcheck.com/
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Sterling
+serviceCategory: Background and Identity Screening
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Sterling API
+  ServiceCategory: Background and Identity Screening
+  ProviderName: Sterling
+  PublisherName: Sterling (a First Advantage company)
+  InvoiceIssuerName: Sterling
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: screenings
+  description: Background screenings (orders) submitted, billed per check.
+  unit: screenings
+  aggregation: sum
+  dimensions:
+  - account
+  - package
+  - region
+- name: report_items
+  description: Individual screening products run within screenings; contribute to per-check price.
+  unit: items
+  aggregation: sum
+  dimensions:
+  - account
+  - product
+- name: continuous_monitoring
+  description: Recurring / continuous screenings that re-run on a schedule to monitor candidates over time.
+  unit: screenings
+  aggregation: sum
+  dimensions:
+  - account
+  - package
+- name: passthrough_fees
+  description: Downstream third-party fees (e.g., court access, verification fees) passed through on invoices.
+  unit: charges
+  aggregation: sum
+  dimensions:
+  - account
+  - jurisdiction
+principles:
+- name: Visibility
+  description: Track screening volume and product mix per package and region; reconcile passthrough fees separately.
+- name: Allocation
+  description: Tag each screening with a clientReferenceId so spend maps to the requisition, team, or cost center that initiated it.
+- name: Optimization
+  description: Use progressive/staged ordering to flag disqualifying results early and avoid paying for downstream products; right-size packages to the role.
+- name: Accountability
+  description: Assign owners per hiring program; review monthly screening spend and continuous-monitoring costs against budget.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

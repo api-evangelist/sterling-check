@@ -1,0 +1,127 @@
+aid: sterling-check
+name: Sterling
+review:
+  question: Does Sterling expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-03'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Sterling's real-time delivery mechanism
+    for screening status is an outbound HTTP webhook: you supply a callbackUri on
+    POST /screenings and Sterling POSTs status-change events to your endpoint.
+    That is server-to-endpoint HTTP (a webhook callback), not a WebSocket and not
+    an SSE stream on Sterling's own API, so there is no server-push transport on
+    Sterling's API surface to model as AsyncAPI. The webhook callback is captured
+    in the OpenAPI (the callbackUri property on the screening request) and in the
+    modeled account-level webhook subscription endpoints.
+findings:
+  summary: |
+    Sterling exposes a real, documented public/partner developer API, but access
+    is GATED. The Sterling API is a RESTful, OAuth2-secured API documented at
+    apidocs.sterlingcheck.app (a Postman-hosted portal) with a developer portal
+    at developer.sterlingcheck.app. You obtain credentials (Client ID and Client
+    Secret) by request, scoped to a screening region (US, EMEA, Canada, or APAC),
+    with separate credentials for sandbox/integration and production. You exchange
+    those credentials for an OAuth2 access token, then create candidates, list
+    screening packages, initiate screenings (orders), invite candidates by email
+    or hosted link, retrieve results/reports (PDF or HTML), and receive real-time
+    status updates via webhook callbacks. It does NOT publish a WebSocket API.
+    Real-time updates are delivered by outbound HTTP webhook callbacks
+    (callbackUri on POST /screenings), which are HTTP POSTs to your endpoint, not
+    a bidirectional ws:// or wss:// stream. No WebSocket or SSE endpoint is
+    documented anywhere in Sterling's API reference as of the review date.
+  acquisition: |
+    Sterling Check Corp was acquired by First Advantage Corporation. The deal was
+    announced 2024-02-29 and CLOSED 2024-10-31, valued at $2.2 billion ($1.2B
+    cash plus 27.15M First Advantage shares). Sterling now operates as "a First
+    Advantage company." Core API functionality and the apidocs.sterlingcheck.app
+    documentation remained in place through the acquisition.
+  accessModel: |
+    Gated. The API is not self-serve; credentials are provisioned as part of a
+    customer/partner relationship via a credentials request form, per screening
+    region. A sandbox/integration environment is available for pre-production
+    testing, with a Developer Portal to view and change screening statuses.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.sterlingcheck.app/v2
+      documented: true
+      note: >-
+        RESTful API for the background-check order lifecycle. The API request
+        host shown here is a MODELED representative host; the exact host is
+        provisioned with your credentials (docs are Postman-hosted at
+        apidocs.sterlingcheck.app and the base is not published unauthenticated).
+    - protocol: OAuth2
+      scheme: https
+      baseURL: https://auth.sterlingcheck.app/oauth/token
+      documented: true
+      note: Client-credentials style exchange of Client ID + Client Secret for an access token. Auth host domain is confirmed.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound HTTP callback to your callbackUri (set on POST /screenings) for real-time screening status updates. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Sterling's API reference as of the review date.
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: No Server-Sent Events stream is documented on Sterling's own API; real-time is delivered via webhook callbacks.
+  endpointsConfirmed:
+    - POST https://auth.sterlingcheck.app/oauth/token
+    - GET  {base}/packages
+    - POST {base}/candidates
+    - POST {base}/screenings
+    - Real-time updates via callbackUri (webhook) supplied on POST /screenings
+    - Results/reports available in PDF or HTML with per-report-item statuses
+  endpointsModeled:
+    - GET    {base}/packages/{packageId}
+    - GET    {base}/candidates/{candidateId}
+    - PATCH  {base}/candidates/{candidateId}
+    - GET    {base}/screenings
+    - GET    {base}/screenings/{screeningId}
+    - POST   {base}/screenings/{screeningId}/cancel
+    - POST   {base}/screenings/{screeningId}/invite
+    - GET    {base}/screenings/{screeningId}/report
+    - GET    {base}/webhooks
+    - POST   {base}/webhooks
+    - DELETE {base}/webhooks/{webhookId}
+  notPublic:
+    - >-
+      User / account management. Sterling's public developer API is scoped to the
+      background-check order lifecycle only. There is no publicly documented REST
+      API, SCIM endpoint, or user-provisioning surface for user/account
+      management; enterprise SSO (SAML 2.0 with Okta / Entra ID) handles
+      authentication but not provisioning.
+sources:
+  - url: https://www.sterlingcheck.com/services/api/
+    type: Documentation
+    note: Sterling API product overview; RESTful, initiate/manage/receive updates; regions US/EMEA/Canada/APAC; "a First Advantage company".
+  - url: https://apidocs.sterlingcheck.app/
+    type: APIReference
+    note: Primary API documentation (Postman-hosted). Confirms OAuth token, GET /packages, POST /candidates, POST /screenings, invite.method email/link, callbackUri.
+  - url: https://developer.sterlingcheck.app/
+    type: DeveloperPortal
+    note: Developer portal / login for credentials and testing; view and change screening statuses.
+  - url: https://sterling.readme.io/reference/introduction
+    type: Documentation
+    note: Deprecated readme.io docs (migrating to apidocs.sterlingcheck.app). Base-URL values returned by automated fetch (kennect.com) were a docs-template artifact and are NOT used.
+  - url: https://www.globenewswire.com/news-release/2024/10/31/2972659/0/en/First-Advantage-Completes-Acquisition-of-Sterling-Check-for-2-2-Billion.html
+    type: PressRelease
+    note: First Advantage completed acquisition of Sterling Check for $2.2B on 2024-10-31.
+  - url: https://www.stitchflow.com/user-management/sterling/api
+    type: Analysis
+    note: Confirms Sterling's public API is scoped to order lifecycle only; no public user-management/SCIM API.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Sterling's public API is request/response
+    REST over HTTPS (OAuth2-secured) covering the background-check order lifecycle,
+    with real-time status delivered by outbound HTTP webhook callbacks rather than
+    a WebSocket or SSE stream. No AsyncAPI document was created because there is no
+    server-push streaming transport on Sterling's own API to model; the webhook
+    callback is represented in the OpenAPI via the callbackUri property and the
+    modeled webhook subscription endpoints.

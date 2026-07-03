@@ -1,0 +1,62 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Sterling
+providerId: sterling-check
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Background Screening
+- Identity Verification
+- Gated API
+- Rate Limiting
+- Quotas
+description: >-
+  Sterling does not publish fixed numeric rate limits for its API. Access is
+  gated behind provisioned OAuth2 credentials (Client ID / Client Secret) issued
+  per screening region and per environment (sandbox and production), and any
+  request throttling is governed by the customer agreement rather than a public
+  per-minute cap. Access tokens obtained from the OAuth token exchange are
+  short-lived and must be refreshed. Background screening is an asynchronous,
+  long-running process: after a screening is initiated, results arrive over
+  minutes to days depending on the products and jurisdictions, so integrations
+  should rely on webhook callbacks (the callbackUri on POST /screenings) for
+  status changes rather than tight polling.
+notes: >-
+  No public numeric per-account or per-endpoint request limits are documented as
+  of the review date. Confirm any contractual throughput limits with your
+  Sterling / First Advantage representative. Prefer webhook callbacks over
+  polling; when polling is necessary, use exponential backoff with jitter and
+  honor Retry-After on 429 responses.
+sources:
+- https://apidocs.sterlingcheck.app/
+- https://www.sterlingcheck.com/services/api/
+responseCodes:
+  throttled: 429
+limits:
+- name: API Requests
+  scope: account
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is publicly documented; governed by contract.
+- name: Access Token Lifetime
+  scope: token
+  metric: seconds
+  limit: short-lived (refresh required)
+  notes: OAuth2 access tokens expire and must be re-requested from the token endpoint.
+- name: Screening Result Delivery
+  scope: screening
+  metric: latency
+  limit: asynchronous (minutes to days)
+  notes: Results depend on products and jurisdictions; use webhook callbacks rather than tight polling.
+policies:
+- name: Prefer Webhooks
+  description: Use the per-screening callbackUri to receive real-time status updates instead of frequent polling.
+- name: Backoff Strategy
+  description: On 429 or transient errors, use exponential backoff with jitter and honor Retry-After.
+- name: Environment Separation
+  description: Sandbox and production use separate credentials and hosts; validate integrations in sandbox first.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

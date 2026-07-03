@@ -1,0 +1,185 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sterling API",
+    "version": "2.0",
+    "description": "Integrate background and identity screening end to end. OAuth2 (Client ID + Client Secret -> access token); access is gated per region and environment. Confirmed: OAuth token, GET /packages, POST /candidates, POST /screenings (invite + callbackUri). Other items are [MODELED] on the documented order lifecycle. API host is a modeled representative host; auth.sterlingcheck.app is confirmed. Sterling is a First Advantage company (acquisition closed 2024-10-31)."
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{accessToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Authentication", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create access token (CONFIRMED)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://auth.sterlingcheck.app/oauth/token",
+            "auth": { "type": "none" },
+            "body": { "type": "json", "data": "{\"grant_type\":\"client_credentials\",\"client_id\":\"{{clientId}}\",\"client_secret\":\"{{clientSecret}}\"}" }
+          },
+          "docs": "Exchange Client ID and Client Secret for an OAuth2 access token. Auth host is confirmed."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Packages", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List packages (CONFIRMED)", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.sterlingcheck.app/v2/packages" },
+          "docs": "Retrieve the screening packages available to your account and required candidate fields."
+        },
+        {
+          "info": { "name": "Get package (MODELED)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/packages/:packageId",
+            "params": [{ "name": "packageId", "value": "", "type": "path", "description": "The package ID." }]
+          },
+          "docs": "[MODELED] Retrieve a single package by ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Candidates", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create candidate (CONFIRMED)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/candidates",
+            "body": { "type": "json", "data": "{\"firstName\":\"Jane\",\"lastName\":\"Doe\",\"email\":\"jane.doe@example.com\",\"clientReferenceId\":\"req-12345\"}" }
+          },
+          "docs": "Create a candidate. Minimum fields: firstName, lastName, email, clientReferenceId."
+        },
+        {
+          "info": { "name": "Get candidate (MODELED)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/candidates/:candidateId",
+            "params": [{ "name": "candidateId", "value": "", "type": "path", "description": "The candidate ID." }]
+          },
+          "docs": "[MODELED] Retrieve a candidate by ID."
+        },
+        {
+          "info": { "name": "Update candidate (MODELED)", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.sterlingcheck.app/v2/candidates/:candidateId",
+            "params": [{ "name": "candidateId", "value": "", "type": "path", "description": "The candidate ID." }],
+            "body": { "type": "json", "data": "{\"phone\":\"+15555550123\"}" }
+          },
+          "docs": "[MODELED] Update mutable fields on a candidate before submitting a screening."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Screenings", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Initiate screening (CONFIRMED)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/screenings",
+            "body": { "type": "json", "data": "{\"candidateId\":\"cand_123\",\"packageId\":\"pkg_basic\",\"clientReferenceId\":\"req-12345\",\"callbackUri\":\"https://example.com/webhooks/sterling\",\"invite\":{\"method\":\"email\"}}" }
+          },
+          "docs": "Initiate a screening for a candidate against a package. invite.method 'email' emails the candidate; 'link' returns a hosted form URL. callbackUri delivers real-time webhook updates."
+        },
+        {
+          "info": { "name": "List screenings (MODELED)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/screenings",
+            "params": [
+              { "name": "status", "value": "in_progress", "type": "query", "description": "Filter by status." },
+              { "name": "limit", "value": "25", "type": "query" },
+              { "name": "offset", "value": "0", "type": "query" }
+            ]
+          },
+          "docs": "[MODELED] List screenings, filterable by status."
+        },
+        {
+          "info": { "name": "Get screening (MODELED)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/screenings/:screeningId",
+            "params": [{ "name": "screeningId", "value": "", "type": "path", "description": "The screening ID." }]
+          },
+          "docs": "[MODELED] Retrieve a screening and its rolled-up report item statuses."
+        },
+        {
+          "info": { "name": "Cancel screening (MODELED)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/screenings/:screeningId/cancel",
+            "params": [{ "name": "screeningId", "value": "", "type": "path", "description": "The screening ID." }]
+          },
+          "docs": "[MODELED] Cancel an in-progress screening where allowed."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Invites", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Resend/retrieve invite (MODELED)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/screenings/:screeningId/invite",
+            "params": [{ "name": "screeningId", "value": "", "type": "path", "description": "The screening ID." }]
+          },
+          "docs": "[MODELED] Resend the invite email or retrieve the hosted form link. The invite object on POST /screenings is confirmed."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Reports", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get screening report (MODELED path, CONFIRMED concept)", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/screenings/:screeningId/report",
+            "params": [{ "name": "screeningId", "value": "", "type": "path", "description": "The screening ID." }],
+            "headers": [{ "name": "Accept", "value": "application/json" }]
+          },
+          "docs": "Retrieve results for a completed screening. Reports are available in PDF or HTML; each report item has its own status."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Webhooks", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List webhook subscriptions (MODELED)", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.sterlingcheck.app/v2/webhooks" },
+          "docs": "[MODELED] List account-level webhook subscriptions. Confirmed mechanism is the per-screening callbackUri."
+        },
+        {
+          "info": { "name": "Create webhook subscription (MODELED)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/webhooks",
+            "body": { "type": "json", "data": "{\"callbackUri\":\"https://example.com/webhooks/sterling\",\"events\":[\"screening.status_changed\"]}" }
+          },
+          "docs": "[MODELED] Register an account-level callback URL."
+        },
+        {
+          "info": { "name": "Delete webhook subscription (MODELED)", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.sterlingcheck.app/v2/webhooks/:webhookId",
+            "params": [{ "name": "webhookId", "value": "", "type": "path", "description": "The webhook subscription ID." }]
+          },
+          "docs": "[MODELED] Delete an account-level webhook subscription."
+        }
+      ]
+    }
+  ]
+}
