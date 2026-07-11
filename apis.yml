@@ -141,6 +141,8 @@ apis:
     events to your endpoint as the screening progresses. The per-screening callback
     is confirmed; account-level webhook subscription management is modeled.
 common:
+- type: DomainSecurity
+  url: security/sterling-check-domain-security.yml
 - type: Authentication
   url: authentication/sterling-check-authentication.yml
 - type: OAuthScopes
