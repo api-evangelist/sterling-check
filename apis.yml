@@ -141,6 +141,10 @@ apis:
     events to your endpoint as the screening progresses. The per-screening callback
     is confirmed; account-level webhook subscription management is modeled.
 common:
+- type: Authentication
+  url: authentication/sterling-check-authentication.yml
+- type: OAuthScopes
+  url: scopes/sterling-check-scopes.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/sterlingcheck
 - type: Website
@@ -155,6 +159,8 @@ common:
   url: rate-limits/sterling-check-rate-limits.yml
 - type: FinOps
   url: finops/sterling-check-finops.yml
+- type: Blog
+  url: https://fadv.com/resources/news/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

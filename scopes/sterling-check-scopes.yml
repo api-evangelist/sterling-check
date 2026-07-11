@@ -1,0 +1,16 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/sterling-check-openapi.yml
+docs: https://sterling.readme.io/reference/authentication
+note: Sterling's API uses OAuth2 client_credentials only (Base64 client_id:client_secret
+  sent to the oauth token endpoint) and documents no scope parameter or scope list;
+  access is governed by the Client ID/Client Secret issued per account and screening
+  region (https://sterling.readme.io/reference/authentication).
+schemes:
+- name: oAuth2ClientCredentials
+  source: openapi/sterling-check-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://auth.sterlingcheck.app/oauth/token
+  description: OAuth2 client credentials grant using your Client ID and Client Secret.
+scopes: []
