@@ -1,0 +1,14 @@
+{
+  "repo": "sterling-check",
+  "feeds": [
+    {
+      "source": "https://fadv.com/resources/news/",
+      "feed_url": "https://fadv.com/resources/news/",
+      "title": "First Advantage News & Resources",
+      "saved": 0,
+      "error": "parse_failed"
+    }
+  ],
+  "fetched": "2026-07-11T11:43:46Z",
+  "post_count": 6
+}
