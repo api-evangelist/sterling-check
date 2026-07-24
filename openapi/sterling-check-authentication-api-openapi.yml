@@ -1,0 +1,109 @@
+openapi: 3.0.3
+info:
+  title: Sterling Authentication API
+  description: 'The Sterling API integrates background and identity screening into your platform and manages the process end to end. It is a RESTful, OAuth2-secured API: you exchange a Client ID and Client Secret for an access token, then create candidates, look up the screening packages available to your account, initiate screenings (orders), invite candidates by email or hosted link, retrieve results/reports (PDF or HTML), and receive real-time status updates via webhook callbacks.
+
+
+    ACCESS IS GATED. Credentials are provisioned per screening region (US, EMEA, Canada, or APAC) by request through Sterling; there is a separate set of credentials for the sandbox/integration environment and for production.
+
+
+    GROUNDING AND MODELING NOTE: The documented, confirmed operations are the OAuth token exchange, GET /packages, POST /candidates, POST /screenings (including the invite object and the callbackUri for webhooks), and the availability of results/reports with per-item statuses. The remaining operations in this document (list/retrieve/cancel screenings, retrieve/update candidates, retrieve a package, report retrieval paths, recurring screening management, and standalone webhook subscription management) are HONESTLY MODELED on Sterling''s documented order lifecycle and are marked in each operation description with "[MODELED]". The API request host is also modeled: exact hosts are provisioned with your credentials. The OAuth host auth.sterlingcheck.app and the documentation host apidocs.sterlingcheck.app are confirmed; api.sterlingcheck.app is a representative modeled base.
+
+
+    Sterling is a First Advantage company (First Advantage completed its $2.2B acquisition of Sterling Check Corp on October 31, 2024).'
+  version: '2.0'
+  contact:
+    name: Sterling (a First Advantage company)
+    url: https://www.sterlingcheck.com/services/api/
+  x-documentation: https://apidocs.sterlingcheck.app/
+  x-developer-portal: https://developer.sterlingcheck.app/
+  x-acquisition: First Advantage completed acquisition of Sterling Check Corp on 2024-10-31 ($2.2B).
+servers:
+- url: https://api.sterlingcheck.app/v2
+  description: Production (MODELED representative host - exact host provisioned with production credentials)
+- url: https://api-sandbox.sterlingcheck.app/v2
+  description: Sandbox / Integration (MODELED representative host - exact host provisioned with sandbox credentials)
+security:
+- oAuth2ClientCredentials: []
+- bearerAuth: []
+tags:
+- name: Authentication
+  description: OAuth2 token exchange using your Client ID and Client Secret.
+paths:
+  /oauth/token:
+    servers:
+    - url: https://auth.sterlingcheck.app
+      description: OAuth token host (CONFIRMED domain)
+    post:
+      operationId: createAccessToken
+      tags:
+      - Authentication
+      summary: Exchange Client ID and Client Secret for an access token
+      description: '[CONFIRMED] Send your Client ID and Client Secret to obtain an OAuth2 access token. The response contains an access token used as a Bearer token on all subsequent requests. Credentials are region-scoped (US, EMEA, Canada, APAC) and differ between sandbox and production.'
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - client_id
+              - client_secret
+              - grant_type
+              properties:
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                  default: client_credentials
+      responses:
+        '200':
+          description: An access token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    example: 3600
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth2 client credentials grant using your Client ID and Client Secret.
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.sterlingcheck.app/oauth/token
+          scopes: {}
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: The access token returned from the OAuth token exchange, sent as a Bearer token.

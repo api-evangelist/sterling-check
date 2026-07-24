@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Sterling Authentication Reports API
+  description: 'The Sterling API integrates background and identity screening into your platform and manages the process end to end. It is a RESTful, OAuth2-secured API: you exchange a Client ID and Client Secret for an access token, then create candidates, look up the screening packages available to your account, initiate screenings (orders), invite candidates by email or hosted link, retrieve results/reports (PDF or HTML), and receive real-time status updates via webhook callbacks.
+
+
+    ACCESS IS GATED. Credentials are provisioned per screening region (US, EMEA, Canada, or APAC) by request through Sterling; there is a separate set of credentials for the sandbox/integration environment and for production.
+
+
+    GROUNDING AND MODELING NOTE: The documented, confirmed operations are the OAuth token exchange, GET /packages, POST /candidates, POST /screenings (including the invite object and the callbackUri for webhooks), and the availability of results/reports with per-item statuses. The remaining operations in this document (list/retrieve/cancel screenings, retrieve/update candidates, retrieve a package, report retrieval paths, recurring screening management, and standalone webhook subscription management) are HONESTLY MODELED on Sterling''s documented order lifecycle and are marked in each operation description with "[MODELED]". The API request host is also modeled: exact hosts are provisioned with your credentials. The OAuth host auth.sterlingcheck.app and the documentation host apidocs.sterlingcheck.app are confirmed; api.sterlingcheck.app is a representative modeled base.
+
+
+    Sterling is a First Advantage company (First Advantage completed its $2.2B acquisition of Sterling Check Corp on October 31, 2024).'
+  version: '2.0'
+  contact:
+    name: Sterling (a First Advantage company)
+    url: https://www.sterlingcheck.com/services/api/
+  x-documentation: https://apidocs.sterlingcheck.app/
+  x-developer-portal: https://developer.sterlingcheck.app/
+  x-acquisition: First Advantage completed acquisition of Sterling Check Corp on 2024-10-31 ($2.2B).
+servers:
+- url: https://api.sterlingcheck.app/v2
+  description: Production (MODELED representative host - exact host provisioned with production credentials)
+- url: https://api-sandbox.sterlingcheck.app/v2
+  description: Sandbox / Integration (MODELED representative host - exact host provisioned with sandbox credentials)
+security:
+- oAuth2ClientCredentials: []
+- bearerAuth: []
+tags:
+- name: Reports
+  description: Results of completed screenings, with per-item statuses (PDF or HTML).
+paths:
+  /screenings/{screeningId}/report:
+    get:
+      operationId: getScreeningReport
+      tags:
+      - Reports
+      summary: Retrieve a screening report
+      description: '[MODELED path, CONFIRMED concept] Retrieve the report/results for a completed screening. A screening rolls up multiple report items, each with its own status. Request PDF or HTML via the Accept header (the docs state reports are available in PDF or HTML formats).'
+      parameters:
+      - $ref: '#/components/parameters/ScreeningId'
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+          enum:
+          - application/json
+          - application/pdf
+          - text/html
+          default: application/json
+      responses:
+        '200':
+          description: The screening report.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/html:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    ReportItem:
+      type: object
+      description: An individual product result within a screening report, each with its own status.
+      properties:
+        product:
+          type: string
+        status:
+          type: string
+          description: Common report item status values (e.g., pending, clear, consider, review).
+        summary:
+          type: string
+    ScreeningStatus:
+      type: string
+      description: Rolled-up screening status. Individual report items carry their own statuses.
+      enum:
+      - pending
+      - awaiting_candidate
+      - in_progress
+      - completed
+      - cancelled
+      - review
+    Report:
+      type: object
+      properties:
+        screeningId:
+          type: string
+        status:
+          $ref: '#/components/schemas/ScreeningStatus'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportItem'
+        completedAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ScreeningId:
+      name: screeningId
+      in: path
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth2 client credentials grant using your Client ID and Client Secret.
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.sterlingcheck.app/oauth/token
+          scopes: {}
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: The access token returned from the OAuth token exchange, sent as a Bearer token.

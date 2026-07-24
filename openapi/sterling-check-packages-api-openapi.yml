@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: Sterling Authentication Packages API
+  description: 'The Sterling API integrates background and identity screening into your platform and manages the process end to end. It is a RESTful, OAuth2-secured API: you exchange a Client ID and Client Secret for an access token, then create candidates, look up the screening packages available to your account, initiate screenings (orders), invite candidates by email or hosted link, retrieve results/reports (PDF or HTML), and receive real-time status updates via webhook callbacks.
+
+
+    ACCESS IS GATED. Credentials are provisioned per screening region (US, EMEA, Canada, or APAC) by request through Sterling; there is a separate set of credentials for the sandbox/integration environment and for production.
+
+
+    GROUNDING AND MODELING NOTE: The documented, confirmed operations are the OAuth token exchange, GET /packages, POST /candidates, POST /screenings (including the invite object and the callbackUri for webhooks), and the availability of results/reports with per-item statuses. The remaining operations in this document (list/retrieve/cancel screenings, retrieve/update candidates, retrieve a package, report retrieval paths, recurring screening management, and standalone webhook subscription management) are HONESTLY MODELED on Sterling''s documented order lifecycle and are marked in each operation description with "[MODELED]". The API request host is also modeled: exact hosts are provisioned with your credentials. The OAuth host auth.sterlingcheck.app and the documentation host apidocs.sterlingcheck.app are confirmed; api.sterlingcheck.app is a representative modeled base.
+
+
+    Sterling is a First Advantage company (First Advantage completed its $2.2B acquisition of Sterling Check Corp on October 31, 2024).'
+  version: '2.0'
+  contact:
+    name: Sterling (a First Advantage company)
+    url: https://www.sterlingcheck.com/services/api/
+  x-documentation: https://apidocs.sterlingcheck.app/
+  x-developer-portal: https://developer.sterlingcheck.app/
+  x-acquisition: First Advantage completed acquisition of Sterling Check Corp on 2024-10-31 ($2.2B).
+servers:
+- url: https://api.sterlingcheck.app/v2
+  description: Production (MODELED representative host - exact host provisioned with production credentials)
+- url: https://api-sandbox.sterlingcheck.app/v2
+  description: Sandbox / Integration (MODELED representative host - exact host provisioned with sandbox credentials)
+security:
+- oAuth2ClientCredentials: []
+- bearerAuth: []
+tags:
+- name: Packages
+  description: Screening packages (groups of screening products) available to your account.
+paths:
+  /packages:
+    get:
+      operationId: listPackages
+      tags:
+      - Packages
+      summary: List available screening packages
+      description: '[CONFIRMED] Retrieve a list of the packages available to your account. A package is a group of screening products. Each package specifies which fields are required on a candidate record in order to process the associated screening.'
+      responses:
+        '200':
+          description: A list of packages.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Package'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /packages/{packageId}:
+    get:
+      operationId: getPackage
+      tags:
+      - Packages
+      summary: Retrieve a package
+      description: '[MODELED] Retrieve a single package by ID, including the screening products it contains and the candidate fields it requires.'
+      parameters:
+      - $ref: '#/components/parameters/PackageId'
+      responses:
+        '200':
+          description: A package.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Package:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        screeningProducts:
+          type: array
+          items:
+            type: string
+          description: The screening products grouped into this package (e.g., criminal, employment verification, drug test).
+        requiredCandidateFields:
+          type: array
+          items:
+            type: string
+          description: Candidate fields required to process a screening with this package.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  parameters:
+    PackageId:
+      name: packageId
+      in: path
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth2 client credentials grant using your Client ID and Client Secret.
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.sterlingcheck.app/oauth/token
+          scopes: {}
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: The access token returned from the OAuth token exchange, sent as a Bearer token.
