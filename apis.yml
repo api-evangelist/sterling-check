@@ -15,7 +15,20 @@ description: Sterling (Sterling Check Corp) is a global background and identity
   portal at developer.sterlingcheck.app. Sterling was acquired by First Advantage
   Corporation for $2.2 billion, with the deal closing on October 31, 2024; Sterling
   now operates as "a First Advantage company."
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: enterprise
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Enterprise · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/sterling-check.png
 tags:
 - Background Screening
 - Identity Verification
@@ -27,119 +40,104 @@ created: '2026-07-03'
 modified: '2026-07-03'
 specificationVersion: '0.19'
 apis:
-- aid: sterling-check:sterling-check-screenings-api
-  name: Sterling Screenings API
-  tags:
-  - Screenings
-  - Orders
-  - Background Check
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: sterling-check:sterling-check-authentication-api
+  name: Sterling Authentication API
+  description: OAuth2 token exchange using your Client ID and Client Secret.
   humanURL: https://apidocs.sterlingcheck.app/
   baseURL: https://api.sterlingcheck.app/v2
+  tags:
+  - Authentication
   properties:
-  - url: https://www.sterlingcheck.com/services/api/
-    type: Documentation
-  - url: https://apidocs.sterlingcheck.app/
-    type: APIReference
-  - url: openapi/sterling-check-openapi.yml
-    type: OpenAPI
-  description: Initiate and manage background screenings (orders). Submit a screening
-    for a candidate against a package, list and retrieve screenings, cancel a
-    screening, and schedule recurring / continuous screenings that proactively
-    monitor a candidate's status over time. POST /screenings is confirmed in the
-    docs; list, retrieve, cancel, and recurring operations are honestly modeled on
-    the documented order lifecycle.
+  - type: OpenAPI
+    url: openapi/sterling-check-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://www.sterlingcheck.com/services/api/
+  - type: APIReference
+    url: https://apidocs.sterlingcheck.app/
 - aid: sterling-check:sterling-check-candidates-api
   name: Sterling Candidates API
+  description: Candidate (subject) records that screenings are run against.
+  humanURL: https://apidocs.sterlingcheck.app/
+  baseURL: https://api.sterlingcheck.app/v2
   tags:
   - Candidates
-  - Subjects
-  - PII
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://apidocs.sterlingcheck.app/
-  baseURL: https://api.sterlingcheck.app/v2
   properties:
-  - url: https://apidocs.sterlingcheck.app/
-    type: APIReference
-  - url: openapi/sterling-check-openapi.yml
-    type: OpenAPI
-  description: Create and manage the candidate (subject) records screenings run
-    against. Minimum fields to create a candidate are first name, last name, email,
-    and clientReferenceId; additional PII is required depending on the package.
-    POST /candidates is confirmed; retrieve and update operations are modeled.
-- aid: sterling-check:sterling-check-packages-api
-  name: Sterling Packages API
-  tags:
-  - Packages
-  - Products
-  - Catalog
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://apidocs.sterlingcheck.app/
-  baseURL: https://api.sterlingcheck.app/v2
-  properties:
-  - url: https://apidocs.sterlingcheck.app/
-    type: APIReference
-  - url: openapi/sterling-check-openapi.yml
-    type: OpenAPI
-  description: Retrieve the screening packages available to your account. A package
-    is a group of screening products (criminal, verifications, drug, identity); the
-    response also specifies which candidate fields are required to process the
-    associated screening. GET /packages is confirmed; retrieve-by-id is modeled.
-- aid: sterling-check:sterling-check-reports-api
-  name: Sterling Reports API
-  tags:
-  - Reports
-  - Results
-  - Adjudication
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://apidocs.sterlingcheck.app/
-  baseURL: https://api.sterlingcheck.app/v2
-  properties:
-  - url: https://apidocs.sterlingcheck.app/
-    type: APIReference
-  - url: openapi/sterling-check-openapi.yml
-    type: OpenAPI
-  description: Retrieve results for completed screenings. Reports are available with
-    per-item statuses (a screening rolls up multiple report items, each with its own
-    status) and can be delivered as PDF or HTML. The Reports concept and result
-    statuses are documented; the exact report retrieval paths are modeled.
+  - type: OpenAPI
+    url: openapi/sterling-check-candidates-api-openapi.yml
+  - type: Documentation
+    url: https://www.sterlingcheck.com/services/api/
+  - type: APIReference
+    url: https://apidocs.sterlingcheck.app/
 - aid: sterling-check:sterling-check-invites-api
   name: Sterling Invites API
+  description: Candidate invitations to complete consent and data collection.
+  humanURL: https://apidocs.sterlingcheck.app/
+  baseURL: https://api.sterlingcheck.app/v2
   tags:
   - Invites
-  - Candidate Experience
-  - Consent
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  properties:
+  - type: OpenAPI
+    url: openapi/sterling-check-invites-api-openapi.yml
+  - type: Documentation
+    url: https://www.sterlingcheck.com/services/api/
+  - type: APIReference
+    url: https://apidocs.sterlingcheck.app/
+- aid: sterling-check:sterling-check-packages-api
+  name: Sterling Packages API
+  description: Screening packages (groups of screening products) available to your account.
   humanURL: https://apidocs.sterlingcheck.app/
   baseURL: https://api.sterlingcheck.app/v2
+  tags:
+  - Packages
   properties:
-  - url: https://apidocs.sterlingcheck.app/
-    type: APIReference
-  - url: openapi/sterling-check-openapi.yml
-    type: OpenAPI
-  description: Invite candidates to complete their portion of a screening (consent
-    and data collection). On POST /screenings, set invite.method to "email" to have
-    Sterling email the candidate, or "link" to receive a hosted form URL in the API
-    response for embedding in your own flow. The invite object on the screening
-    request is confirmed; standalone invite retrieval/resend is modeled.
+  - type: OpenAPI
+    url: openapi/sterling-check-packages-api-openapi.yml
+  - type: Documentation
+    url: https://www.sterlingcheck.com/services/api/
+  - type: APIReference
+    url: https://apidocs.sterlingcheck.app/
+- aid: sterling-check:sterling-check-reports-api
+  name: Sterling Reports API
+  description: Results of completed screenings, with per-item statuses (PDF or HTML).
+  humanURL: https://apidocs.sterlingcheck.app/
+  baseURL: https://api.sterlingcheck.app/v2
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/sterling-check-reports-api-openapi.yml
+  - type: Documentation
+    url: https://www.sterlingcheck.com/services/api/
+  - type: APIReference
+    url: https://apidocs.sterlingcheck.app/
+- aid: sterling-check:sterling-check-screenings-api
+  name: Sterling Screenings API
+  description: Screening orders and their lifecycle, including recurring/continuous screening.
+  humanURL: https://apidocs.sterlingcheck.app/
+  baseURL: https://api.sterlingcheck.app/v2
+  tags:
+  - Screenings
+  properties:
+  - type: OpenAPI
+    url: openapi/sterling-check-screenings-api-openapi.yml
+  - type: Documentation
+    url: https://www.sterlingcheck.com/services/api/
+  - type: APIReference
+    url: https://apidocs.sterlingcheck.app/
 - aid: sterling-check:sterling-check-webhooks-api
   name: Sterling Webhooks API
-  tags:
-  - Webhooks
-  - Callbacks
-  - Notifications
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  description: Real-time screening status callbacks.
   humanURL: https://apidocs.sterlingcheck.app/
   baseURL: https://api.sterlingcheck.app/v2
+  tags:
+  - Webhooks
   properties:
-  - url: https://apidocs.sterlingcheck.app/
-    type: APIReference
-  - url: openapi/sterling-check-openapi.yml
-    type: OpenAPI
-  description: Receive real-time updates for the screenings you initiate. Specify a
-    Callback URI in a POST /screenings request and Sterling posts status-change
-    events to your endpoint as the screening progresses. The per-screening callback
-    is confirmed; account-level webhook subscription management is modeled.
+  - type: OpenAPI
+    url: openapi/sterling-check-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://www.sterlingcheck.com/services/api/
+  - type: APIReference
+    url: https://apidocs.sterlingcheck.app/
 common:
 - type: AgenticAccess
   url: agentic-access/sterling-check-agentic-access.yml
