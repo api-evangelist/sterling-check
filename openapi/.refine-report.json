@@ -1,0 +1,26 @@
+{
+  "provider": "sterling-check",
+  "sources": [
+    "sterling-check-authentication-api-openapi.yml",
+    "sterling-check-candidates-api-openapi.yml",
+    "sterling-check-invites-api-openapi.yml",
+    "sterling-check-packages-api-openapi.yml",
+    "sterling-check-reports-api-openapi.yml",
+    "sterling-check-screenings-api-openapi.yml",
+    "sterling-check-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "sterling-check-authentication-api-openapi.yml",
+    "sterling-check-candidates-api-openapi.yml",
+    "sterling-check-invites-api-openapi.yml",
+    "sterling-check-packages-api-openapi.yml",
+    "sterling-check-reports-api-openapi.yml",
+    "sterling-check-screenings-api-openapi.yml",
+    "sterling-check-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
