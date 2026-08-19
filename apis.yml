@@ -38,7 +38,7 @@ tags:
 - Gated API
 created: '2026-07-03'
 modified: '2026-07-03'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: sterling-check:sterling-check-authentication-api
   name: Sterling Authentication API
