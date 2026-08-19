@@ -1,0 +1,84 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sterling Authentication Candidates API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://auth.sterlingcheck.app/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Candidates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a candidate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/candidates",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "[CONFIRMED] Create a candidate (the subject of a screening). Minimum fields are first name, last name, email, and clientReferenceId. Additional PII (date of birth, address history, government IDs, etc.) may be required depending on the package the candidate will be screened with."
+        },
+        {
+          "info": {
+            "name": "Retrieve a candidate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/candidates/:candidateId",
+            "params": [
+              {
+                "name": "candidateId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "[MODELED] Retrieve a candidate record by ID."
+        },
+        {
+          "info": {
+            "name": "Update a candidate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.sterlingcheck.app/v2/candidates/:candidateId",
+            "params": [
+              {
+                "name": "candidateId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "[MODELED] Update mutable fields on a candidate record before a screening is submitted."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

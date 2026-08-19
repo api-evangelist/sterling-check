@@ -1,0 +1,108 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sterling Authentication Screenings API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://auth.sterlingcheck.app/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Screenings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List screenings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/screenings",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "[MODELED] List the screenings (orders) in your account, filterable by status."
+        },
+        {
+          "info": {
+            "name": "Initiate a screening",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/screenings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "[CONFIRMED] Initiate a background screening (order) for a candidate against a package. Three initiation workflows are supported via the invite object: set invite.method to \"email\" so Sterling emails the candidate an invite; set invite.method to \"link\" to receive a hosted form URL in the response for embedding in your own flow; or omit the invite to initiate directly when candidate data is already complete. Provide a callbackUri to receive real-time webhook status updates. Set the recurring objec"
+        },
+        {
+          "info": {
+            "name": "Retrieve a screening",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/screenings/:screeningId",
+            "params": [
+              {
+                "name": "screeningId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "[MODELED] Retrieve a screening (order) by ID, including its current status and rolled-up report item statuses."
+        },
+        {
+          "info": {
+            "name": "Cancel a screening",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/screenings/:screeningId/cancel",
+            "params": [
+              {
+                "name": "screeningId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "[MODELED] Cancel an in-progress screening where allowed by product and compliance rules."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

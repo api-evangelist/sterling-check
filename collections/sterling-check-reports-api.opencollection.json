@@ -1,0 +1,53 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sterling Authentication Reports API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://auth.sterlingcheck.app/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a screening report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.sterlingcheck.app/v2/screenings/:screeningId/report",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "screeningId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "[MODELED path, CONFIRMED concept] Retrieve the report/results for a completed screening. A screening rolls up multiple report items, each with its own status. Request PDF or HTML via the Accept header (the docs state reports are available in PDF or HTML formats)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

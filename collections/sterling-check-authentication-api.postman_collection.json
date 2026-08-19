@@ -1,0 +1,203 @@
+{
+  "item": [
+    {
+      "id": "2252f021-7f1b-4fad-85e3-02105c10cd9d",
+      "name": "Authentication",
+      "description": {
+        "content": "OAuth2 token exchange using your Client ID and Client Secret.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ac5dc1c0-3b85-4af8-a9f6-6ef5bca0a743",
+          "name": "Exchange Client ID and Client Secret for an access token",
+          "request": {
+            "name": "Exchange Client ID and Client Secret for an access token",
+            "description": {
+              "content": "[CONFIRMED] Send your Client ID and Client Secret to obtain an OAuth2 access token. The response contains an access token used as a Bearer token on all subsequent requests. Credentials are region-scoped (US, EMEA, Canada, APAC) and differ between sandbox and production.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "{{oauth-token-Url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\",\n  \"grant_type\": \"client_credentials\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "110a0e5b-8ecf-441b-9946-98ae8b14847d",
+              "name": "An access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{oauth-token-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\",\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"string\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 3600\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "23a102f6-06a1-44ba-a4bf-9cef211be34a",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{oauth-token-Url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\",\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.sterlingcheck.app/v2",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://auth.sterlingcheck.app",
+      "key": "oauth-token-Url"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.sterlingcheck.app/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9745d764-11aa-4995-a043-61f232835f0d",
+    "name": "Sterling Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Sterling API integrates background and identity screening into your platform and manages the process end to end. It is a RESTful, OAuth2-secured API: you exchange a Client ID and Client Secret for an access token, then create candidates, look up the screening packages available to your account, initiate screenings (orders), invite candidates by email or hosted link, retrieve results/reports (PDF or HTML), and receive real-time status updates via webhook callbacks.\n\nACCESS IS GATED. Credentials are provisioned per screening region (US, EMEA, Canada, or APAC) by request through Sterling; there is a separate set of credentials for the sandbox/integration environment and for production.\n\nGROUNDING AND MODELING NOTE: The documented, confirmed operations are the OAuth token exchange, GET /packages, POST /candidates, POST /screenings (including the invite object and the callbackUri for webhooks), and the availability of results/reports with per-item statuses. The remaining operations in this document (list/retrieve/cancel screenings, retrieve/update candidates, retrieve a package, report retrieval paths, recurring screening management, and standalone webhook subscription management) are HONESTLY MODELED on Sterling's documented order lifecycle and are marked in each operation description with \"[MODELED]\". The API request host is also modeled: exact hosts are provisioned with your credentials. The OAuth host auth.sterlingcheck.app and the documentation host apidocs.sterlingcheck.app are confirmed; api.sterlingcheck.app is a representative modeled base.\n\nSterling is a First Advantage company (First Advantage completed its $2.2B acquisition of Sterling Check Corp on October 31, 2024).\n\nContact Support:\n Name: Sterling (a First Advantage company)",
+      "type": "text/plain"
+    }
+  }
+}

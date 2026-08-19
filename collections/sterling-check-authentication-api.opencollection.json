@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sterling Authentication API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://auth.sterlingcheck.app/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Exchange Client ID and Client Secret for an access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.sterlingcheck.app/v2/oauth/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "[CONFIRMED] Send your Client ID and Client Secret to obtain an OAuth2 access token. The response contains an access token used as a Bearer token on all subsequent requests. Credentials are region-scoped (US, EMEA, Canada, APAC) and differ between sandbox and production."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

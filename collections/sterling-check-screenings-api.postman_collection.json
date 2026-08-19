@@ -1,0 +1,813 @@
+{
+  "item": [
+    {
+      "id": "face1cc1-828d-4b38-b529-525e2a9f9a9f",
+      "name": "Screenings",
+      "description": {
+        "content": "Screening orders and their lifecycle, including recurring/continuous screening.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "05a217eb-78dc-46c7-a177-1d714ed4dc8f",
+          "name": "List screenings",
+          "request": {
+            "name": "List screenings",
+            "description": {
+              "content": "[MODELED] List the screenings (orders) in your account, filterable by status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "screenings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "17d8887c-1e7c-485a-bcc8-d7d252905c23",
+              "name": "A list of screenings.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"candidateId\": \"string\",\n      \"packageId\": \"string\",\n      \"clientReferenceId\": \"string\",\n      \"status\": \"<string>\",\n      \"inviteUrl\": \"https://YFqWDHzugFQgQAygfHZcEZNgme.oldG55ozGvel3wF8CRuynSSOX5pbB8PJaEN+JbwTs,H+vAYPIMMTiIJvPm7X3ps40rOiZZ7DX8QwTRTv6V+V1\",\n      \"callbackUri\": \"http://pcEewVjzVXlExXQyCWZVNPFrVmLjl.wvaBKrzDiuINlNY0sF2dWN9Jn,RnZgZ.,Nry\",\n      \"reportItems\": [\n        {\n          \"product\": \"string\",\n          \"status\": \"string\",\n          \"summary\": \"string\"\n        },\n        {\n          \"product\": \"string\",\n          \"status\": \"string\",\n          \"summary\": \"string\"\n        }\n      ],\n      \"createdAt\": \"2012-02-19T12:47:38.799Z\",\n      \"completedAt\": \"1992-02-25T12:37:32.727Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"candidateId\": \"string\",\n      \"packageId\": \"string\",\n      \"clientReferenceId\": \"string\",\n      \"status\": \"<string>\",\n      \"inviteUrl\": \"http://lsQQjTaGzVhELIRjiErhFWKtRAA.mwkk80T3\",\n      \"callbackUri\": \"http://AflSWXfyltOoYZOHXnYHkzQMEuzxrSj.kegteJVRQYimrBbPbsjawu5xApJZBIthmA\",\n      \"reportItems\": [\n        {\n          \"product\": \"string\",\n          \"status\": \"string\",\n          \"summary\": \"string\"\n        },\n        {\n          \"product\": \"string\",\n          \"status\": \"string\",\n          \"summary\": \"string\"\n        }\n      ],\n      \"createdAt\": \"1984-05-17T20:35:59.184Z\",\n      \"completedAt\": \"1963-11-05T02:38:48.656Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cb54271c-3c1b-4273-970f-7d0bb029f4b3",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "be9910b3-74f8-42cf-95cf-d4c645e5e721",
+          "name": "Initiate a screening",
+          "request": {
+            "name": "Initiate a screening",
+            "description": {
+              "content": "[CONFIRMED] Initiate a background screening (order) for a candidate against a package. Three initiation workflows are supported via the invite object: set invite.method to \"email\" so Sterling emails the candidate an invite; set invite.method to \"link\" to receive a hosted form URL in the response for embedding in your own flow; or omit the invite to initiate directly when candidate data is already complete. Provide a callbackUri to receive real-time webhook status updates. Set the recurring object to schedule continuous/recurring screening.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "screenings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"candidateId\": \"<string>\",\n  \"packageId\": \"<string>\",\n  \"clientReferenceId\": \"<string>\",\n  \"callbackUri\": \"<uri>\",\n  \"invite\": {\n    \"method\": \"<string>\"\n  },\n  \"recurring\": {\n    \"enabled\": \"<boolean>\",\n    \"interval\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f4a3aa72-62ce-4601-a864-1566913e544f",
+              "name": "The created screening. If invite.method is \"link\", the response includes the hosted form URL.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"candidateId\": \"<string>\",\n  \"packageId\": \"<string>\",\n  \"clientReferenceId\": \"<string>\",\n  \"callbackUri\": \"<uri>\",\n  \"invite\": {\n    \"method\": \"<string>\"\n  },\n  \"recurring\": {\n    \"enabled\": \"<boolean>\",\n    \"interval\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"candidateId\": \"string\",\n  \"packageId\": \"string\",\n  \"clientReferenceId\": \"string\",\n  \"status\": \"<string>\",\n  \"inviteUrl\": \"http://FEtEqTOoLEhzhnSt.rwFifOxyyeHSfxjiRN8F\",\n  \"callbackUri\": \"http://bHsochhbsvARcyBSpfPOAtGZCRQ.qaufB36VVxAF4vUthJL06c\",\n  \"reportItems\": [\n    {\n      \"product\": \"string\",\n      \"status\": \"string\",\n      \"summary\": \"string\"\n    },\n    {\n      \"product\": \"string\",\n      \"status\": \"string\",\n      \"summary\": \"string\"\n    }\n  ],\n  \"createdAt\": \"1960-11-25T23:32:43.017Z\",\n  \"completedAt\": \"1967-08-19T02:27:15.168Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f7c131fb-9d2c-49cf-8cc8-5a568d2eb47e",
+              "name": "The request was malformed or missing required fields.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"candidateId\": \"<string>\",\n  \"packageId\": \"<string>\",\n  \"clientReferenceId\": \"<string>\",\n  \"callbackUri\": \"<uri>\",\n  \"invite\": {\n    \"method\": \"<string>\"\n  },\n  \"recurring\": {\n    \"enabled\": \"<boolean>\",\n    \"interval\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dfbcd28d-5ef9-4217-a0ba-5e1f95c5ee72",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"candidateId\": \"<string>\",\n  \"packageId\": \"<string>\",\n  \"clientReferenceId\": \"<string>\",\n  \"callbackUri\": \"<uri>\",\n  \"invite\": {\n    \"method\": \"<string>\"\n  },\n  \"recurring\": {\n    \"enabled\": \"<boolean>\",\n    \"interval\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4f985db1-513a-4732-ab76-08e513f4fafc",
+          "name": "Retrieve a screening",
+          "request": {
+            "name": "Retrieve a screening",
+            "description": {
+              "content": "[MODELED] Retrieve a screening (order) by ID, including its current status and rolled-up report item statuses.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "screenings",
+                ":screeningId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "screeningId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1f1d7649-8512-4175-8037-acd61dc35da0",
+              "name": "A screening.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings",
+                    ":screeningId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "screeningId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"candidateId\": \"string\",\n  \"packageId\": \"string\",\n  \"clientReferenceId\": \"string\",\n  \"status\": \"<string>\",\n  \"inviteUrl\": \"http://FEtEqTOoLEhzhnSt.rwFifOxyyeHSfxjiRN8F\",\n  \"callbackUri\": \"http://bHsochhbsvARcyBSpfPOAtGZCRQ.qaufB36VVxAF4vUthJL06c\",\n  \"reportItems\": [\n    {\n      \"product\": \"string\",\n      \"status\": \"string\",\n      \"summary\": \"string\"\n    },\n    {\n      \"product\": \"string\",\n      \"status\": \"string\",\n      \"summary\": \"string\"\n    }\n  ],\n  \"createdAt\": \"1960-11-25T23:32:43.017Z\",\n  \"completedAt\": \"1967-08-19T02:27:15.168Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9484587e-3f4f-434f-8571-0e532649670f",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings",
+                    ":screeningId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "screeningId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5979a01c-e66e-4ca5-b7fd-4692e52e6faf",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings",
+                    ":screeningId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "screeningId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4748dd44-0913-460e-b67c-6a1e10323213",
+          "name": "Cancel a screening",
+          "request": {
+            "name": "Cancel a screening",
+            "description": {
+              "content": "[MODELED] Cancel an in-progress screening where allowed by product and compliance rules.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "screenings",
+                ":screeningId",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "screeningId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fa634244-f21f-4adb-b6e3-8c37953c82a2",
+              "name": "The cancelled screening.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings",
+                    ":screeningId",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "screeningId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"candidateId\": \"string\",\n  \"packageId\": \"string\",\n  \"clientReferenceId\": \"string\",\n  \"status\": \"<string>\",\n  \"inviteUrl\": \"http://FEtEqTOoLEhzhnSt.rwFifOxyyeHSfxjiRN8F\",\n  \"callbackUri\": \"http://bHsochhbsvARcyBSpfPOAtGZCRQ.qaufB36VVxAF4vUthJL06c\",\n  \"reportItems\": [\n    {\n      \"product\": \"string\",\n      \"status\": \"string\",\n      \"summary\": \"string\"\n    },\n    {\n      \"product\": \"string\",\n      \"status\": \"string\",\n      \"summary\": \"string\"\n    }\n  ],\n  \"createdAt\": \"1960-11-25T23:32:43.017Z\",\n  \"completedAt\": \"1967-08-19T02:27:15.168Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d889cad8-aa42-449c-b4d7-723095994f17",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings",
+                    ":screeningId",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "screeningId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "184d20bc-c6a8-45f6-839d-2c51727a066a",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "screenings",
+                    ":screeningId",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "screeningId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.sterlingcheck.app/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://auth.sterlingcheck.app/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "750b6c88-6ca4-4f42-bf26-d2a9d58a5bcf",
+    "name": "Sterling Authentication Screenings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Sterling API integrates background and identity screening into your platform and manages the process end to end. It is a RESTful, OAuth2-secured API: you exchange a Client ID and Client Secret for an access token, then create candidates, look up the screening packages available to your account, initiate screenings (orders), invite candidates by email or hosted link, retrieve results/reports (PDF or HTML), and receive real-time status updates via webhook callbacks.\n\nACCESS IS GATED. Credentials are provisioned per screening region (US, EMEA, Canada, or APAC) by request through Sterling; there is a separate set of credentials for the sandbox/integration environment and for production.\n\nGROUNDING AND MODELING NOTE: The documented, confirmed operations are the OAuth token exchange, GET /packages, POST /candidates, POST /screenings (including the invite object and the callbackUri for webhooks), and the availability of results/reports with per-item statuses. The remaining operations in this document (list/retrieve/cancel screenings, retrieve/update candidates, retrieve a package, report retrieval paths, recurring screening management, and standalone webhook subscription management) are HONESTLY MODELED on Sterling's documented order lifecycle and are marked in each operation description with \"[MODELED]\". The API request host is also modeled: exact hosts are provisioned with your credentials. The OAuth host auth.sterlingcheck.app and the documentation host apidocs.sterlingcheck.app are confirmed; api.sterlingcheck.app is a representative modeled base.\n\nSterling is a First Advantage company (First Advantage completed its $2.2B acquisition of Sterling Check Corp on October 31, 2024).\n\nContact Support:\n Name: Sterling (a First Advantage company)",
+      "type": "text/plain"
+    }
+  }
+}
