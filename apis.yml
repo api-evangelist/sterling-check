@@ -130,6 +130,8 @@ apis:
   humanURL: https://apidocs.sterlingcheck.app/
   baseURL: https://api.sterlingcheck.app/v2
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
