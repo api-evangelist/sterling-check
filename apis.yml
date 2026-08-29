@@ -15,6 +15,18 @@ description: Sterling (Sterling Check Corp) is a global background and identity
   portal at developer.sterlingcheck.app. Sterling was acquired by First Advantage
   Corporation for $2.2 billion, with the deal closing on October 31, 2024; Sterling
   now operates as "a First Advantage company."
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: enterprise
   onboarding: self-serve
