@@ -44,6 +44,13 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/sterling-c
 tags:
 - Background Screening
 - Identity Verification
+- Background Checks
+- Human Resources
+- Compliance
+- Gated API
+tags_raw:
+- Background Screening
+- Identity Verification
 - Background Check
 - HR Tech
 - Compliance
