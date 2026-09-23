@@ -1,13 +1,7 @@
 {
   "provider": "sterling-check",
   "sources": [
-    "sterling-check-authentication-api-openapi.yml",
-    "sterling-check-candidates-api-openapi.yml",
-    "sterling-check-invites-api-openapi.yml",
-    "sterling-check-packages-api-openapi.yml",
-    "sterling-check-reports-api-openapi.yml",
-    "sterling-check-screenings-api-openapi.yml",
-    "sterling-check-webhooks-api-openapi.yml"
+    "_original/sterling-check-openapi.yml"
   ],
   "outputs": [
     "sterling-check-authentication-api-openapi.yml",
@@ -21,6 +15,18 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "sterling-check-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "sterling-check-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sterling-check-candidates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sterling-check-invites-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sterling-check-packages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sterling-check-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sterling-check-screenings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sterling-check-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
