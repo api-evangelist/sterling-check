@@ -125,6 +125,15 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    InviteRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum:
+          - email
+          - link
+          description: '"email" sends the candidate an invitation email; "link" returns a hosted form URL in the response for you to embed.'
     ScreeningCreate:
       type: object
       required:
@@ -145,15 +154,6 @@ components:
           $ref: '#/components/schemas/InviteRequest'
         recurring:
           $ref: '#/components/schemas/RecurringConfig'
-    InviteRequest:
-      type: object
-      properties:
-        method:
-          type: string
-          enum:
-          - email
-          - link
-          description: '"email" sends the candidate an invitation email; "link" returns a hosted form URL in the response for you to embed.'
     RecurringConfig:
       type: object
       description: '[MODELED] Configure continuous/recurring screening to monitor a candidate over time.'
@@ -166,6 +166,24 @@ components:
           - monthly
           - quarterly
           - annually
+    ReportItem:
+      type: object
+      description: An individual product result within a screening report, each with its own status.
+      properties:
+        product:
+          type: string
+        status:
+          type: string
+          description: Common report item status values (e.g., pending, clear, consider, review).
+        summary:
+          type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
     ScreeningStatus:
       type: string
       description: Rolled-up screening status. Individual report items carry their own statuses.
@@ -176,13 +194,6 @@ components:
       - completed
       - cancelled
       - review
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
     Screening:
       type: object
       properties:
@@ -213,26 +224,15 @@ components:
         completedAt:
           type: string
           format: date-time
-    ReportItem:
-      type: object
-      description: An individual product result within a screening report, each with its own status.
-      properties:
-        product:
-          type: string
-        status:
-          type: string
-          description: Common report item status values (e.g., pending, clear, consider, review).
-        summary:
-          type: string
   responses:
-    BadRequest:
-      description: The request was malformed or missing required fields.
+    Unauthorized:
+      description: Missing or invalid access token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid access token.
+    BadRequest:
+      description: The request was malformed or missing required fields.
       content:
         application/json:
           schema:
