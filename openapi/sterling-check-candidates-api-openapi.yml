@@ -121,21 +121,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Address'
-    Address:
-      type: object
-      properties:
-        line1:
-          type: string
-        line2:
-          type: string
-        city:
-          type: string
-        region:
-          type: string
-        postalCode:
-          type: string
-        country:
-          type: string
     Candidate:
       allOf:
       - $ref: '#/components/schemas/CandidateCreate'
@@ -153,7 +138,35 @@ components:
           type: string
         message:
           type: string
+    Address:
+      type: object
+      properties:
+        line1:
+          type: string
+        line2:
+          type: string
+        city:
+          type: string
+        region:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
+  parameters:
+    CandidateId:
+      name: candidateId
+      in: path
+      required: true
+      schema:
+        type: string
   responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid access token.
       content:
@@ -166,19 +179,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    CandidateId:
-      name: candidateId
-      in: path
-      required: true
-      schema:
-        type: string
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

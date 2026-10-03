@@ -124,36 +124,40 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: The request was malformed or missing required fields.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ScreeningId:
+      name: screeningId
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
-    InviteRequest:
+    Error:
       type: object
       properties:
-        method:
+        code:
           type: string
-          enum:
-          - email
-          - link
-          description: '"email" sends the candidate an invitation email; "link" returns a hosted form URL in the response for you to embed.'
-    ScreeningCreate:
-      type: object
-      required:
-      - candidateId
-      - packageId
-      properties:
-        candidateId:
+        message:
           type: string
-        packageId:
-          type: string
-        clientReferenceId:
-          type: string
-        callbackUri:
-          type: string
-          format: uri
-          description: URL Sterling posts real-time status-change webhook events to.
-        invite:
-          $ref: '#/components/schemas/InviteRequest'
-        recurring:
-          $ref: '#/components/schemas/RecurringConfig'
     RecurringConfig:
       type: object
       description: '[MODELED] Configure continuous/recurring screening to monitor a candidate over time.'
@@ -166,34 +170,6 @@ components:
           - monthly
           - quarterly
           - annually
-    ReportItem:
-      type: object
-      description: An individual product result within a screening report, each with its own status.
-      properties:
-        product:
-          type: string
-        status:
-          type: string
-          description: Common report item status values (e.g., pending, clear, consider, review).
-        summary:
-          type: string
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-    ScreeningStatus:
-      type: string
-      description: Rolled-up screening status. Individual report items carry their own statuses.
-      enum:
-      - pending
-      - awaiting_candidate
-      - in_progress
-      - completed
-      - cancelled
-      - review
     Screening:
       type: object
       properties:
@@ -224,32 +200,56 @@ components:
         completedAt:
           type: string
           format: date-time
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request was malformed or missing required fields.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    ScreeningId:
-      name: screeningId
-      in: path
-      required: true
-      schema:
-        type: string
+    InviteRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum:
+          - email
+          - link
+          description: '"email" sends the candidate an invitation email; "link" returns a hosted form URL in the response for you to embed.'
+    ScreeningCreate:
+      type: object
+      required:
+      - candidateId
+      - packageId
+      properties:
+        candidateId:
+          type: string
+        packageId:
+          type: string
+        clientReferenceId:
+          type: string
+        callbackUri:
+          type: string
+          format: uri
+          description: URL Sterling posts real-time status-change webhook events to.
+        invite:
+          $ref: '#/components/schemas/InviteRequest'
+        recurring:
+          $ref: '#/components/schemas/RecurringConfig'
+    ScreeningStatus:
+      type: string
+      description: Rolled-up screening status. Individual report items carry their own statuses.
+      enum:
+      - pending
+      - awaiting_candidate
+      - in_progress
+      - completed
+      - cancelled
+      - review
+    ReportItem:
+      type: object
+      description: An individual product result within a screening report, each with its own status.
+      properties:
+        product:
+          type: string
+        status:
+          type: string
+          description: Common report item status values (e.g., pending, clear, consider, review).
+        summary:
+          type: string
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

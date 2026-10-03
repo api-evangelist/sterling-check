@@ -84,32 +84,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    WebhookSubscriptionCreate:
-      type: object
-      required:
-      - callbackUri
-      properties:
-        callbackUri:
-          type: string
-          format: uri
-        events:
-          type: array
-          items:
-            type: string
     WebhookSubscription:
       type: object
       properties:
@@ -131,6 +106,31 @@ components:
           type: string
         message:
           type: string
+    WebhookSubscriptionCreate:
+      type: object
+      required:
+      - callbackUri
+      properties:
+        callbackUri:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

@@ -63,6 +63,13 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    PackageId:
+      name: packageId
+      in: path
+      required: true
+      schema:
+        type: string
   responses:
     Unauthorized:
       description: Missing or invalid access token.
@@ -103,13 +110,6 @@ components:
           type: string
         message:
           type: string
-  parameters:
-    PackageId:
-      name: packageId
-      in: path
-      required: true
-      schema:
-        type: string
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

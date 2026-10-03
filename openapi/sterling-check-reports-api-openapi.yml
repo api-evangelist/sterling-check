@@ -59,6 +59,49 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  schemas:
+    Report:
+      type: object
+      properties:
+        screeningId:
+          type: string
+        status:
+          $ref: '#/components/schemas/ScreeningStatus'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportItem'
+        completedAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ScreeningStatus:
+      type: string
+      description: Rolled-up screening status. Individual report items carry their own statuses.
+      enum:
+      - pending
+      - awaiting_candidate
+      - in_progress
+      - completed
+      - cancelled
+      - review
+    ReportItem:
+      type: object
+      description: An individual product result within a screening report, each with its own status.
+      properties:
+        product:
+          type: string
+        status:
+          type: string
+          description: Common report item status values (e.g., pending, clear, consider, review).
+        summary:
+          type: string
   responses:
     Unauthorized:
       description: Missing or invalid access token.
@@ -79,49 +122,6 @@ components:
       required: true
       schema:
         type: string
-  schemas:
-    ReportItem:
-      type: object
-      description: An individual product result within a screening report, each with its own status.
-      properties:
-        product:
-          type: string
-        status:
-          type: string
-          description: Common report item status values (e.g., pending, clear, consider, review).
-        summary:
-          type: string
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-    ScreeningStatus:
-      type: string
-      description: Rolled-up screening status. Individual report items carry their own statuses.
-      enum:
-      - pending
-      - awaiting_candidate
-      - in_progress
-      - completed
-      - cancelled
-      - review
-    Report:
-      type: object
-      properties:
-        screeningId:
-          type: string
-        status:
-          $ref: '#/components/schemas/ScreeningStatus'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportItem'
-        completedAt:
-          type: string
-          format: date-time
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2
