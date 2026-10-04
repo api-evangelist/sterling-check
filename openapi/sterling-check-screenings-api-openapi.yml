@@ -124,52 +124,16 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid access token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request was malformed or missing required fields.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    ScreeningId:
-      name: screeningId
-      in: path
-      required: true
-      schema:
-        type: string
   schemas:
-    Error:
+    InviteRequest:
       type: object
       properties:
-        code:
-          type: string
-        message:
-          type: string
-    RecurringConfig:
-      type: object
-      description: '[MODELED] Configure continuous/recurring screening to monitor a candidate over time.'
-      properties:
-        enabled:
-          type: boolean
-        interval:
+        method:
           type: string
           enum:
-          - monthly
-          - quarterly
-          - annually
+          - email
+          - link
+          description: '"email" sends the candidate an invitation email; "link" returns a hosted form URL in the response for you to embed.'
     Screening:
       type: object
       properties:
@@ -200,15 +164,6 @@ components:
         completedAt:
           type: string
           format: date-time
-    InviteRequest:
-      type: object
-      properties:
-        method:
-          type: string
-          enum:
-          - email
-          - link
-          description: '"email" sends the candidate an invitation email; "link" returns a hosted form URL in the response for you to embed.'
     ScreeningCreate:
       type: object
       required:
@@ -229,6 +184,13 @@ components:
           $ref: '#/components/schemas/InviteRequest'
         recurring:
           $ref: '#/components/schemas/RecurringConfig'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
     ScreeningStatus:
       type: string
       description: Rolled-up screening status. Individual report items carry their own statuses.
@@ -250,6 +212,44 @@ components:
           description: Common report item status values (e.g., pending, clear, consider, review).
         summary:
           type: string
+    RecurringConfig:
+      type: object
+      description: '[MODELED] Configure continuous/recurring screening to monitor a candidate over time.'
+      properties:
+        enabled:
+          type: boolean
+        interval:
+          type: string
+          enum:
+          - monthly
+          - quarterly
+          - annually
+  parameters:
+    ScreeningId:
+      name: screeningId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: The request was malformed or missing required fields.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

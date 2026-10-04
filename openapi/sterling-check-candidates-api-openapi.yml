@@ -91,36 +91,14 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    CandidateId:
+      name: candidateId
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
-    CandidateCreate:
-      type: object
-      required:
-      - firstName
-      - lastName
-      - email
-      - clientReferenceId
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        middleName:
-          type: string
-        email:
-          type: string
-          format: email
-        clientReferenceId:
-          type: string
-          description: Your own reference identifier for the candidate.
-        phone:
-          type: string
-        dateOfBirth:
-          type: string
-          format: date
-        addresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/Address'
     Candidate:
       allOf:
       - $ref: '#/components/schemas/CandidateCreate'
@@ -153,22 +131,44 @@ components:
           type: string
         country:
           type: string
-  parameters:
-    CandidateId:
-      name: candidateId
-      in: path
-      required: true
-      schema:
-        type: string
+    CandidateCreate:
+      type: object
+      required:
+      - firstName
+      - lastName
+      - email
+      - clientReferenceId
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        email:
+          type: string
+          format: email
+        clientReferenceId:
+          type: string
+          description: Your own reference identifier for the candidate.
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
   responses:
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid access token.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
