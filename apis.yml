@@ -160,6 +160,9 @@ apis:
   - type: APIReference
     url: https://apidocs.sterlingcheck.app/
 common:
+- type: CapabilityMap
+  url: capabilities/sterling-check-capability-edges.yml
+  name: Sterling Business Capability Map
 - type: AgenticAccess
   url: agentic-access/sterling-check-agentic-access.yml
 - type: DomainSecurity
