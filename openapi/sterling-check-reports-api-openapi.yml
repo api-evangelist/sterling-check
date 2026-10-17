@@ -59,26 +59,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    ScreeningId:
-      name: screeningId
-      in: path
-      required: true
-      schema:
-        type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     Report:
       type: object
@@ -101,16 +81,6 @@ components:
           type: string
         message:
           type: string
-    ScreeningStatus:
-      type: string
-      description: Rolled-up screening status. Individual report items carry their own statuses.
-      enum:
-      - pending
-      - awaiting_candidate
-      - in_progress
-      - completed
-      - cancelled
-      - review
     ReportItem:
       type: object
       description: An individual product result within a screening report, each with its own status.
@@ -122,6 +92,36 @@ components:
           description: Common report item status values (e.g., pending, clear, consider, review).
         summary:
           type: string
+    ScreeningStatus:
+      type: string
+      description: Rolled-up screening status. Individual report items carry their own statuses.
+      enum:
+      - pending
+      - awaiting_candidate
+      - in_progress
+      - completed
+      - cancelled
+      - review
+  parameters:
+    ScreeningId:
+      name: screeningId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2
