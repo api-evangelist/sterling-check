@@ -1,4 +1,4 @@
-# Sterling (sterling-check)
+# Sterling
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,166 +64,135 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Sterling (Sterling Check Corp) is a global background and identity screening provider offering criminal checks, employment and education verifications, drug and health screening, identity verification, and continuous (recurring) monitoring. The Sterling API is a documented RESTful, OAuth2-secured developer API that lets platforms, ATS/HRIS systems, and marketplaces initiate background checks, manage candidates and screening packages, retrieve results and reports (PDF/HTML), send candidate invites, and receive real-time status updates via webhook callbacks.
+Sterling (Sterling Check Corp) is a global background and identity screening provider offering criminal checks, employment and education verifications, drug and health screening, identity verification, and continuous (recurring) monitoring. The Sterling API is a documented RESTful, OAuth2-secured developer API that lets platforms, ATS/HRIS systems, and marketplaces initiate background checks, manage candidates and screening packages, retrieve results and reports (PDF/HTML), send candidate invites, and receive real-time status updates via webhook callbacks. Access is gated - developers request a Client ID and Client Secret per screening region (US, EMEA, Canada, or APAC) - and the docs are published via a Postman-hosted portal at apidocs.sterlingcheck.app with a developer portal at developer.sterlingcheck.app. Sterling was acquired by First Advantage Corporation for $2.2 billion, with the deal closing on October 31, 2024; Sterling now operates as "a First Advantage company."
 
-**Access is gated.** Developers request a Client ID and Client Secret per screening region (US, EMEA, Canada, or APAC), with separate credentials for the sandbox/integration and production environments. Documentation is published via a Postman-hosted portal at [apidocs.sterlingcheck.app](https://apidocs.sterlingcheck.app/), with a developer portal at [developer.sterlingcheck.app](https://developer.sterlingcheck.app/).
+**Areas:** Background Screening · Identity Verification · Background Checks · Human Resources · Compliance · Gated API
 
-**First Advantage acquisition.** Sterling Check Corp was acquired by First Advantage Corporation; the deal closed on **October 31, 2024** at a **$2.2 billion** valuation. Sterling now operates as "a First Advantage company."
+## Sterling on APIs.io
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/sterling-check/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/sterling-check/refs/heads/main/apis.yml)
+Everything profiled for Sterling is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/sterling-check/](https://apis.io/providers/sterling-check/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (7)
 
-- Background Screening
-- Identity Verification
-- Background Check
-- HR Tech
-- Compliance
-- Gated API
+- [Sterling Authentication API](https://apis.io/apis/sterling-check/sterling-check-authentication-api/) — OAuth2 token exchange using your Client ID and Client Secret.
+- [Sterling Candidates API](https://apis.io/apis/sterling-check/sterling-check-candidates-api/) — Candidate (subject) records that screenings are run against.
+- [Sterling Invites API](https://apis.io/apis/sterling-check/sterling-check-invites-api/) — Candidate invitations to complete consent and data collection.
+- [Sterling Packages API](https://apis.io/apis/sterling-check/sterling-check-packages-api/) — Screening packages (groups of screening products) available to your account.
+- [Sterling Reports API](https://apis.io/apis/sterling-check/sterling-check-reports-api/) — Results of completed screenings, with per-item statuses (PDF or HTML).
+- [Sterling Screenings API](https://apis.io/apis/sterling-check/sterling-check-screenings-api/) — Screening orders and their lifecycle, including recurring/continuous screening.
+- [Sterling Webhooks API](https://apis.io/apis/sterling-check/sterling-check-webhooks-api/) — Real-time screening status callbacks.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-07-03
-- **Modified:** 2026-07-03
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Confirmed vs. Modeled
+#### Agentic access (1)
 
-The Sterling API is real and documented, but its full reference sits behind a gated (Postman-hosted) portal. Confirmed from public documentation: the OAuth token exchange (Client ID + Client Secret → access token), `GET /packages`, `POST /candidates`, `POST /screenings` (including the `invite` object with `method` = `email`/`link` and the `callbackUri` webhook), and results/reports availability in PDF or HTML with per-report-item statuses. Everything else in the OpenAPI and collections is honestly **[MODELED]** on Sterling's documented order lifecycle and marked as such. The API request host `https://api.sterlingcheck.app/v2` is a modeled representative host (exact host is provisioned with credentials); the OAuth host `auth.sterlingcheck.app` is confirmed.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## APIs
+- [Sterling Check Agentic Access](https://apis.io/agentic-access/sterling-check/sterling-check-agentic-access/)
 
-### Sterling Screenings API
+#### Collections (8)
 
-Initiate and manage background screenings (orders) — submit a screening for a candidate against a package, list/retrieve/cancel screenings, and schedule recurring / continuous screenings. `POST /screenings` is confirmed; list/retrieve/cancel and recurring operations are modeled.
+Postman and Open Collection request collections.
 
-- **Human URL:** [https://apidocs.sterlingcheck.app/](https://apidocs.sterlingcheck.app/)
-- **Base URL:** `https://api.sterlingcheck.app/v2`
+- [Sterling API](https://apis.io/collections/sterling-check/open-sterling-check/)
+- [Sterling Authentication API](https://apis.io/collections/sterling-check/open-sterling-check-authentication-api/)
+- [Sterling Authentication Candidates API](https://apis.io/collections/sterling-check/open-sterling-check-candidates-api/)
+- [Sterling Authentication Invites API](https://apis.io/collections/sterling-check/open-sterling-check-invites-api/)
+- [Sterling Authentication Packages API](https://apis.io/collections/sterling-check/open-sterling-check-packages-api/)
+- [Sterling Authentication Reports API](https://apis.io/collections/sterling-check/open-sterling-check-reports-api/)
+- [Sterling Authentication Screenings API](https://apis.io/collections/sterling-check/open-sterling-check-screenings-api/)
+- [Sterling Authentication Webhooks API](https://apis.io/collections/sterling-check/open-sterling-check-webhooks-api/)
 
-#### Tags
+#### Security (2)
 
-- Screenings
-- Orders
-- Background Check
+Authentication, trust centre, and vulnerability disclosure.
 
-#### Properties
+- [Sterling Check Authentication](https://apis.io/security/sterling-check/sterling-check-authentication/)
+- [Sterling Check Domain Security](https://apis.io/security/sterling-check/sterling-check-domain-security/)
 
-- [Documentation](https://www.sterlingcheck.com/services/api/)
-- [API Reference](https://apidocs.sterlingcheck.app/)
-- [OpenAPI](openapi/sterling-check-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/sterling-check.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/sterling-check.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### OAuth scopes (1)
 
-### Sterling Candidates API
+The permissions the API asks for.
 
-Create and manage the candidate (subject) records screenings run against. Minimum fields are first name, last name, email, and `clientReferenceId`. `POST /candidates` is confirmed; retrieve and update are modeled.
+- [Sterling Check Scopes](https://apis.io/scopes/sterling-check/sterling-check-scopes/)
 
-- **Human URL:** [https://apidocs.sterlingcheck.app/](https://apidocs.sterlingcheck.app/)
-- **Base URL:** `https://api.sterlingcheck.app/v2`
+#### Plans and pricing (1)
 
-#### Tags
+Published plans, tiers and prices.
 
-- Candidates
-- Subjects
-- PII
+- [Sterling Check Plans Pricing](https://apis.io/plans/sterling-check/sterling-check-plans-pricing/)
 
-#### Properties
+#### Rate limits (1)
 
-- [API Reference](https://apidocs.sterlingcheck.app/)
-- [OpenAPI](openapi/sterling-check-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/sterling-check.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/sterling-check.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Published request limits.
 
-### Sterling Packages API
+- [Sterling Check Rate Limits](https://apis.io/rate-limits/sterling-check/sterling-check-rate-limits/)
 
-Retrieve the screening packages available to your account. A package groups screening products and specifies which candidate fields are required. `GET /packages` is confirmed; retrieve-by-id is modeled.
+#### FinOps (1)
 
-- **Human URL:** [https://apidocs.sterlingcheck.app/](https://apidocs.sterlingcheck.app/)
-- **Base URL:** `https://api.sterlingcheck.app/v2`
+What the API costs to run, by operation.
 
-#### Tags
+- [Sterling Check Finops](https://apis.io/finops/sterling-check/sterling-check-finops/)
 
-- Packages
-- Products
-- Catalog
+## Where to find this API
 
-#### Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- [API Reference](https://apidocs.sterlingcheck.app/)
-- [OpenAPI](openapi/sterling-check-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/sterling-check.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/sterling-check.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Sterling Reports API
-
-Retrieve results for completed screenings. A screening rolls up multiple report items, each with its own status, delivered as PDF or HTML. The Reports concept and result statuses are documented; the exact report retrieval paths are modeled.
-
-- **Human URL:** [https://apidocs.sterlingcheck.app/](https://apidocs.sterlingcheck.app/)
-- **Base URL:** `https://api.sterlingcheck.app/v2`
-
-#### Tags
-
-- Reports
-- Results
-- Adjudication
-
-#### Properties
-
-- [API Reference](https://apidocs.sterlingcheck.app/)
-- [OpenAPI](openapi/sterling-check-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/sterling-check.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/sterling-check.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Sterling Invites API
-
-Invite candidates to complete consent and data collection. On `POST /screenings`, set `invite.method` to `email` (Sterling emails the candidate) or `link` (receive a hosted form URL in the response). The invite object is confirmed; standalone invite retrieval/resend is modeled.
-
-- **Human URL:** [https://apidocs.sterlingcheck.app/](https://apidocs.sterlingcheck.app/)
-- **Base URL:** `https://api.sterlingcheck.app/v2`
-
-#### Tags
-
-- Invites
-- Candidate Experience
-- Consent
-
-#### Properties
-
-- [API Reference](https://apidocs.sterlingcheck.app/)
-- [OpenAPI](openapi/sterling-check-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/sterling-check.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/sterling-check.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Sterling Webhooks API
-
-Receive real-time updates for the screenings you initiate. Specify a `callbackUri` on `POST /screenings` and Sterling posts status-change events to your endpoint. The per-screening callback is confirmed; account-level webhook subscription management is modeled.
-
-- **Human URL:** [https://apidocs.sterlingcheck.app/](https://apidocs.sterlingcheck.app/)
-- **Base URL:** `https://api.sterlingcheck.app/v2`
-
-#### Tags
-
-- Webhooks
-- Callbacks
-- Notifications
-
-#### Properties
-
-- [API Reference](https://apidocs.sterlingcheck.app/)
-- [OpenAPI](openapi/sterling-check-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/sterling-check.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/sterling-check.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/sterlingcheck)
 - [Website](https://www.sterlingcheck.com)
 - [Documentation](https://apidocs.sterlingcheck.app/)
-- [Developer Portal](https://developer.sterlingcheck.app/)
-- [Plans](plans/sterling-check-plans-pricing.yml)
-- [Rate Limits](rate-limits/sterling-check-rate-limits.yml)
-- [Fin Ops](finops/sterling-check-finops.yml)
+- [Blog](https://fadv.com/resources/news/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 27.2** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 48.4 |
+| Contract governance | 0.0 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 31.0 |
+| Access clarity | 7.9 |
+
+**Agent readiness 25.0** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 21.6** — Employment & Payroll
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/sterling-check/](https://apis.io/providers/sterling-check/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Sterling: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/sterling-check/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
